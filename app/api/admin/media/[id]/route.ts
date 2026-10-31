@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -19,7 +19,7 @@ export async function DELETE(
     }
 
     const media = await prisma.media.findUnique({
-      where: { id: params.id },
+      where: { id: (await params).id },
     });
 
     if (!media) {
@@ -29,7 +29,7 @@ export async function DELETE(
     await deleteMediaFile(media.storageKey);
 
     await prisma.media.delete({
-      where: { id: params.id },
+      where: { id: (await params).id },
     });
 
     await AuditService.log({

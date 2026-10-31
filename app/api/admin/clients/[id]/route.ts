@@ -8,16 +8,16 @@ export const dynamic = 'force-dynamic';
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  return handleUpdate(req, params.id);
+  return handleUpdate(req, (await params).id);
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  return handleUpdate(req, params.id);
+  return handleUpdate(req, (await params).id);
 }
 
 async function handleUpdate(req: Request, id: string) {
@@ -50,7 +50,7 @@ async function handleUpdate(req: Request, id: string) {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -59,13 +59,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const deleted = await ClientService.deleteClient(params.id);
+    const deleted = await ClientService.deleteClient((await params).id);
 
     await AuditService.log({
       userId: user.id,
       action: 'DELETE_CLIENT',
       entity: 'Client',
-      entityId: params.id,
+      entityId: (await params).id,
       details: { name: deleted.name },
     });
 

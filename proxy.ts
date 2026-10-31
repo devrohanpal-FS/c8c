@@ -6,7 +6,7 @@ import { getNextAuthSecret } from '@/lib/env';
 const secret = getNextAuthSecret();
 const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // 1. Static asset fast-path (bypass middleware)

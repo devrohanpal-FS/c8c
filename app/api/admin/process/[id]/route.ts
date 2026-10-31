@@ -9,16 +9,16 @@ export const dynamic = 'force-dynamic';
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  return handleUpdate(req, params.id);
+  return handleUpdate(req, (await params).id);
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  return handleUpdate(req, params.id);
+  return handleUpdate(req, (await params).id);
 }
 
 async function handleUpdate(req: Request, id: string) {
@@ -56,7 +56,7 @@ async function handleUpdate(req: Request, id: string) {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -66,14 +66,14 @@ export async function DELETE(
     }
 
     const deleted = await prisma.processStep.delete({
-      where: { id: params.id },
+      where: { id: (await params).id },
     });
 
     await AuditService.log({
       userId: user.id,
       action: 'DELETE_PROCESS_STEP',
       entity: 'ProcessStep',
-      entityId: params.id,
+      entityId: (await params).id,
       details: { title: deleted.title },
     });
 

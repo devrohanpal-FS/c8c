@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -17,7 +17,7 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const slide = await HeroSlideService.getSlideById(params.id);
+    const slide = await HeroSlideService.getSlideById((await params).id);
     if (!slide) {
       return NextResponse.json({ error: 'Slide not found' }, { status: 404 });
     }
@@ -33,14 +33,14 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PATCH(req, { params });
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -50,7 +50,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const updated = await HeroSlideService.updateSlide(params.id, body);
+    const updated = await HeroSlideService.updateSlide((await params).id, body);
 
     await AuditService.log({
       userId: user.id,
@@ -71,7 +71,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -80,13 +80,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const deleted = await HeroSlideService.deleteSlide(params.id);
+    const deleted = await HeroSlideService.deleteSlide((await params).id);
 
     await AuditService.log({
       userId: user.id,
       action: 'DELETE_HERO_SLIDE',
       entity: 'HeroSlide',
-      entityId: params.id,
+      entityId: (await params).id,
       details: { title: deleted.title },
     });
 

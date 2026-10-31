@@ -4,14 +4,14 @@ import { UserService, UserRole } from '@/lib/services/userService';
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PATCH(req, { params });
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -26,12 +26,12 @@ export async function PATCH(
     const body = await req.json();
 
     if (body.role) {
-      const updatedUser = await UserService.updateUserRole(params.id, body.role as UserRole, user.id);
+      const updatedUser = await UserService.updateUserRole((await params).id, body.role as UserRole, user.id);
       return NextResponse.json({ success: true, user: updatedUser });
     }
 
     if (body.password) {
-      const result = await UserService.resetUserPassword(params.id, body.password, user.id);
+      const result = await UserService.resetUserPassword((await params).id, body.password, user.id);
       return NextResponse.json({ success: true, message: 'Password reset successfully.', user: result });
     }
 
@@ -46,7 +46,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -58,7 +58,7 @@ export async function DELETE(
       );
     }
 
-    const deactivatedUser = await UserService.deactivateUser(params.id, user.id);
+    const deactivatedUser = await UserService.deactivateUser((await params).id, user.id);
     return NextResponse.json({ success: true, message: 'User account deactivated.', user: deactivatedUser });
   } catch (error) {
     return NextResponse.json(

@@ -6,14 +6,14 @@ import { AuditService } from '@/lib/audit';
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PATCH(req, { params });
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -23,7 +23,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const updatedWork = await WorkService.updateWork(params.id, body, user.id);
+    const updatedWork = await WorkService.updateWork((await params).id, body, user.id);
 
     await AuditService.log({
       userId: user.id,
@@ -44,7 +44,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -53,7 +53,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const deletedWork = await WorkService.softDeleteWork(params.id, user.id);
+    const deletedWork = await WorkService.softDeleteWork((await params).id, user.id);
 
     await AuditService.log({
       userId: user.id,

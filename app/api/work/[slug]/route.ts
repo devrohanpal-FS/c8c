@@ -1,1 +1,3 @@
-export { GET, revalidate } from '@/app/api/public/work/[slug]/route';
+export { GET } from '@/app/api/public/work/[slug]/route';
+
+export const revalidate = 60;

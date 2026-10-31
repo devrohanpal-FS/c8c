@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -17,7 +17,7 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const service = await ServiceService.getServiceById(params.id);
+    const service = await ServiceService.getServiceById((await params).id);
     if (!service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
@@ -33,14 +33,14 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PATCH(req, { params });
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -50,13 +50,13 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const updated = await ServiceService.updateService(params.id, body);
+    const updated = await ServiceService.updateService((await params).id, body);
 
     await AuditService.log({
       userId: user.id,
       action: 'UPDATE_SERVICE',
       entity: 'Service',
-      entityId: params.id,
+      entityId: (await params).id,
       details: body as Record<string, unknown>,
     });
 
@@ -71,7 +71,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -80,13 +80,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const deleted = await ServiceService.deleteService(params.id);
+    const deleted = await ServiceService.deleteService((await params).id);
 
     await AuditService.log({
       userId: user.id,
       action: 'DELETE_SERVICE',
       entity: 'Service',
-      entityId: params.id,
+      entityId: (await params).id,
       details: { title: deleted.title },
     });
 

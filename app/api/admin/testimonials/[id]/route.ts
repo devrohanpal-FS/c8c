@@ -7,14 +7,14 @@ export const dynamic = 'force-dynamic';
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PATCH(req, { params });
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -24,7 +24,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const updated = await TestimonialService.updateTestimonial(params.id, body);
+    const updated = await TestimonialService.updateTestimonial((await params).id, body);
 
     return NextResponse.json({ success: true, testimonial: updated });
   } catch (error: any) {
@@ -37,7 +37,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -46,7 +46,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    await TestimonialService.deleteTestimonial(params.id);
+    await TestimonialService.deleteTestimonial((await params).id);
 
     return NextResponse.json({ success: true, message: 'Testimonial deleted' });
   } catch (error: any) {

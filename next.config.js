@@ -41,7 +41,6 @@ const securityHeaders = [
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
@@ -50,15 +49,6 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: securityHeaders,
-      },
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
       },
       {
         source: '/uploads/:path*',

@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -17,7 +17,7 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const btsImage = await BtsService.getBtsById(params.id);
+    const btsImage = await BtsService.getBtsById((await params).id);
     if (!btsImage) {
       return NextResponse.json({ error: 'BTS image not found' }, { status: 404 });
     }
@@ -33,14 +33,14 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PATCH(req, { params });
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -50,7 +50,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const updated = await BtsService.updateBts(params.id, body);
+    const updated = await BtsService.updateBts((await params).id, body);
 
     await AuditService.log({
       userId: user.id,
@@ -71,7 +71,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuthUser();
@@ -80,13 +80,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const deleted = await BtsService.deleteBts(params.id);
+    const deleted = await BtsService.deleteBts((await params).id);
 
     await AuditService.log({
       userId: user.id,
       action: 'DELETE_BTS_IMAGE',
       entity: 'BtsImage',
-      entityId: params.id,
+      entityId: (await params).id,
       details: { imageUrl: deleted.imageUrl },
     });
 
