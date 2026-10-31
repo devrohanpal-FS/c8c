@@ -1,0 +1,16 @@
+# Development stage with hot reload
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev)
+RUN npm ci
+
+# Expose Next.js port
+EXPOSE 3000
+
+# Start in development mode
+CMD ["npm", "run", "dev"]

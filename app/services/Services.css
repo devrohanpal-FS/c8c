@@ -1,0 +1,51 @@
+.services-page,
+.service-detail-page {
+  position: relative;
+  width: 100%;
+  font-family: var(--font-sans, sans-serif);
+}
+
+.services-page .hero-heading,
+.service-detail-page .hero-heading {
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+.services-page__section {
+  position: relative;
+  width: 100%;
+}
+
+/* Rotator Ring Animation for Services */
+@keyframes spinRing {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinRing 16s linear infinite;
+}
+
+/* Glass & Card Micro-interactions */
+.service-glass-card {
+  background: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-glass-card:hover {
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+}
+
+/* Text Background Clip Transition */
+.service-clip-heading {
+  transition: background-size 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
+}

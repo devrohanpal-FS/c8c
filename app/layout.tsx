@@ -1,40 +1,32 @@
 import type { Metadata } from 'next';
+import { Playfair_Display, Anton, Space_Grotesk } from 'next/font/google';
 import './globals.css';
-import LenisProvider from '@/components/LenisProvider';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import SessionProviderWrapper from '@/components/SessionProviderWrapper';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+
+const fontSerif = Playfair_Display({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+});
+
+const fontCondensed = Anton({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-condensed',
+});
+
+const fontSans = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
 
 export const metadata: Metadata = {
-  title: 'C8C (Cre8tiveCove) — Award-Winning Full-Stack Creative Agency',
+  title: 'C8C (Cre8tiveCove) — Creative Agency Platform',
   description:
-    'C8C (Cre8tiveCove) is an elite creative agency engineering interactive 3D web experiences, motion direction, digital cinematography, and kinetic branding.',
-  keywords: [
-    'Cre8tiveCove',
-    'C8C',
-    'Creative Agency',
-    'Next.js 14',
-    'GSAP Animations',
-    '3D WebGL',
-    'Luxury Branding',
-    'Motion Design',
-  ],
-  authors: [{ name: 'C8C Cre8tiveCove' }],
-  openGraph: {
-    title: 'C8C (Cre8tiveCove) — We Craft The Unseen',
-    description:
-      'Elite creative agency specializing in interactive 3D web experiences, motion direction, and digital luxury.',
-    url: 'https://c8c.agency',
-    siteName: 'C8C Cre8tiveCove',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-        width: 1200,
-        height: 630,
-        alt: 'C8C Cre8tiveCove Showcase',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
+    'Award-winning creative agency platform engineered with Next.js 14, GSAP, Lenis, and Tailwind CSS.',
 };
 
 export default function RootLayout({
@@ -43,10 +35,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-black text-white font-['Outfit'] antialiased">
+    <html
+      lang="en"
+      className={`${fontSerif.variable} ${fontCondensed.variable} ${fontSans.variable}`}
+    >
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/bueno.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="bg-[#0a0a0a] text-[#f5f0e6] font-sans antialiased selection:bg-[#ffd700] selection:text-[#0a0a0a]">
         <SessionProviderWrapper>
-          <LenisProvider>{children}</LenisProvider>
+          <SmoothScrollProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </SmoothScrollProvider>
         </SessionProviderWrapper>
       </body>
     </html>

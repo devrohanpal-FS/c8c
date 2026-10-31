@@ -12,34 +12,39 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('C8C Application Error:', error);
+    // Log error internally in non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[C8C APPLICATION ERROR]:', error);
+    }
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white font-['Outfit']">
-      <div className="max-w-md w-full p-8 rounded-3xl bg-[#0a0a0a] border-2 border-[var(--gold)] shadow-[0_0_60px_rgba(255,215,0,0.25)] text-center flex flex-col items-center">
-        <div className="w-16 h-16 rounded-full bg-red-950/80 border border-red-500 flex items-center justify-center text-red-400 mb-6">
+    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-6 text-white font-sans antialiased">
+      <div className="max-w-md w-full p-8 sm:p-10 rounded-3xl bg-[#121212] border border-white/15 shadow-2xl text-center flex flex-col items-center">
+        <div className="w-16 h-16 rounded-full bg-red-950/80 border border-red-500/50 flex items-center justify-center text-red-400 mb-6">
           <ShieldAlert className="w-8 h-8" />
         </div>
 
-        <h2 className="text-2xl font-black uppercase font-['Syne']">
-          ANOMALY DETECTED<span className="text-[var(--gold)]">.</span>
+        <h2 className="text-2xl font-bold uppercase tracking-wider text-white font-mono">
+          SYSTEM NOTICE<span className="text-[#ffd700]">.</span>
         </h2>
 
-        <p className="mt-3 text-sm text-gray-300 font-light">
-          {error.message || 'An unexpected rendering fault occurred inside the C8C Engine.'}
+        <p className="mt-3 text-sm text-gray-300 font-light leading-relaxed">
+          {process.env.NODE_ENV === 'development'
+            ? error.message || 'An unexpected rendering fault occurred.'
+            : 'An unexpected error occurred while processing your request. Please try again.'}
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full">
           <button
             onClick={() => reset()}
-            className="btn-gold flex-1 py-3 text-xs flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-5 rounded-full bg-[#ffd700] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-white transition-all cursor-pointer"
           >
-            <RefreshCw className="w-4 h-4" /> Retry Connection
+            <RefreshCw className="w-4 h-4" /> Try Again
           </button>
           <Link
             href="/"
-            className="btn-outline-gold flex-1 py-3 text-xs flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-5 rounded-full bg-white/10 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-white/20 transition-all border border-white/20"
           >
             <Home className="w-4 h-4" /> Return Home
           </Link>

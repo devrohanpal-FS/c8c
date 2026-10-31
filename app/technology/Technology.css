@@ -1,0 +1,17 @@
+.technology-services-page {
+  position: relative;
+  width: 100%;
+  font-family: var(--font-sans, sans-serif);
+  scroll-behavior: smooth;
+}
+
+.technology-services-page .hero-heading {
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+/* Smooth custom styling for minimalist cards */
+.technology-card-glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

@@ -1,0 +1,8 @@
+
+.mobile-menu-overlay {
+  contain: layout style;
+}
+
+.mobile-menu-overlay__backdrop {
+  background-color: #0a0a0a;
+}

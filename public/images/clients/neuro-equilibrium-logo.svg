@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="400" height="160">
+  <rect width="100%" height="100%" fill="transparent"/>
+  <g transform="translate(15, 25)">
+    <circle cx="42" cy="45" r="30" fill="#0f2b46"/>
+    <path d="M28 45 C34 32, 50 32, 56 45 C50 58, 34 58, 28 45 Z" fill="none" stroke="#00a8cc" stroke-width="4"/>
+    <circle cx="42" cy="45" r="5" fill="#ffd700"/>
+    <text x="88" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" letter-spacing="1.5" fill="#0f2b46">NeuroEquilibrium</text>
+    <text x="90" y="66" font-family="monospace" font-size="10" font-weight="700" letter-spacing="2" fill="#00a8cc">DIAGNOSTIC SYSTEMS</text>
+  </g>
+</svg>

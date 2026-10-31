@@ -1,0 +1,81 @@
+.cuboid-perspective-container {
+  perspective: 1000px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cuboid-marquee-wrapper {
+  --cuboid-height: 4.5rem;
+  position: relative;
+  width: 100%;
+  height: var(--cuboid-height);
+  transform-style: preserve-3d;
+  animation: Loop3d 10s linear infinite;
+}
+
+.cuboid-marquee-wrapper:hover {
+  animation-play-state: paused;
+}
+
+.cuboid-face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  backface-visibility: hidden;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.cuboid-face-1 {
+  transform: rotateX(0deg) translateZ(calc(var(--cuboid-height) / 2));
+  background: #0a0a0a;
+  color: #FFFEF2;
+}
+
+.cuboid-face-2 {
+  transform: rotateX(90deg) translateZ(calc(var(--cuboid-height) / 2));
+  background: #C0FF4A;
+  color: #0a0a0a;
+}
+
+.cuboid-face-3 {
+  transform: rotateX(180deg) translateZ(calc(var(--cuboid-height) / 2));
+  background: #FF8400;
+  color: #ffffff;
+}
+
+.cuboid-face-4 {
+  transform: rotateX(270deg) translateZ(calc(var(--cuboid-height) / 2));
+  background: #FFFEF2;
+  color: #0a0a0a;
+}
+
+.cuboid-marquee-content {
+  display: flex;
+  white-space: nowrap;
+  animation: cuboidMarqueeScroll 20s linear infinite;
+  will-change: transform;
+}
+
+@keyframes Loop3d {
+  0% {
+    transform: rotateX(0deg) rotateY(0.01deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(0.01deg);
+  }
+}
+
+@keyframes cuboidMarqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

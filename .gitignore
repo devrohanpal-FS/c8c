@@ -1,38 +1,72 @@
-# dependencies
-/node_modules
-/.pnp
+# Dependencies
+node_modules/
+.pnp
 .pnp.js
 
-# testing
-/coverage
+# Testing & Coverage
+coverage/
 
-# next.js
-/.next/
-/out/
+# Next.js build output
+.next/
+out/
+build/
+dist/
 
-# production
-/build
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts.bak
 
-# misc
-.DS_Store
+# Environment variables & secrets (CRITICAL)
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+!.env.example
+
+# Private Keys & Certificates
 *.pem
+*.key
+*.cert
+*.crt
 
-# debug
+# SQLite & Database files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+prisma/*.db
+prisma/*.db-journal
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+*.log
 
-# local env files
-.env*.local
-.env
+# Operating System & Editor Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
 
-# vercel
-.vercel
+# Scratch & Temporary Developer Scripts
+scratch/
+temp/
+tmp/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# User-uploaded dynamic media
+public/uploads/*
+!public/uploads/.gitkeep
 
-# prisma SQLite dev database
-/prisma/dev.db
-/prisma/dev.db-journal
+# Clutter / Third-party vendor tools
+get-shit-done/

@@ -1,0 +1,13 @@
+
+.footer-component {
+  position: relative;
+  background-color: #0a0a0a;
+  color: #f5f0e6;
+  overflow: hidden;
+}
+
+.footer-component__inner {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}

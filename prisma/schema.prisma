@@ -8,42 +8,396 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("ADMIN")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  password     String
+  role         String     @default("ADMIN")
+  avatar       String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deletedAt    DateTime?
+
+  createdWorks Work[]     @relation("WorkCreatedBy")
+  updatedWorks Work[]     @relation("WorkUpdatedBy")
+  auditLogs    AuditLog[]
+
+  @@index([email])
+  @@index([role])
 }
 
-model Project {
-  id           String   @id @default(cuid())
-  title        String
-  slug         String   @unique
-  client       String
-  year         String
-  category     String
-  description  String
-  thumbnailUrl String
-  videoUrl     String
-  featured     Boolean  @default(false)
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model SiteSettings {
+  id                String   @id @default(uuid())
+  siteName          String   @default("CRE8TIVECOVE")
+  tagline           String   @default("Lean Mean Storytelling Machine • Weird Energy Since Y2K")
+  description       String?
+  phone             String   @default("+91 9999-659-129")
+  email             String   @default("hello@cre8tivecove.com")
+  address           String   @default("Delhi, India")
+  linkedin          String   @default("https://www.linkedin.com/company/cre8tivecove/")
+  instagram         String   @default("https://www.instagram.com/cre8tivecove.cc/")
+  youtube           String   @default("https://www.youtube.com/@CRE8TIVECOVE")
+  footerContent     String?  @default("© 2026 CRE8TIVECOVE. All rights reserved.")
+  defaultCtaHeading String?  @default("READY TO START?")
+  defaultCtaText    String?  @default("Let's make something iconic together.")
+  defaultCtaUrl     String?  @default("/contact")
+  defaultSeoTitle   String?  @default("CRE8TIVECOVE — Creative & Digital Agency")
+  defaultSeoDesc    String?  @default("We make people feel something. Strategy, Creative Direction, Digital Experiences.")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model HomePage {
+  id             String   @id @default(uuid())
+  heroTitle      String   @default("WEIRD ENERGY SINCE Y2K")
+  heroSubtitle   String?  @default("Lean Mean Storytelling Machine")
+  heroVideoUrl   String?
+  heroPosterUrl  String?
+  heroCtaText    String?  @default("EXPLORE WORK")
+  heroCtaUrl     String?  @default("/work")
+  marqueeText    String?  @default("STRATEGY • CREATIVE DIRECTION • VISUAL IDENTITY • DIGITAL EXPERIENCES • BRANDING")
+  marqueeActive  Boolean  @default(true)
+  ctaHeading     String?  @default("READY TO MAKE SOMETHING WEIRD?")
+  ctaDescription String?  @default("Let's build something people won't stop talking about.")
+  ctaButtonText  String?  @default("START A PROJECT")
+  ctaButtonUrl   String?  @default("/contact")
+  cultureTag     String?  @default("THE CULTURE")
+  cultureTitle   String?  @default("BEHIND THE LENS BEYOND THE STORY")
+  updatedAt      DateTime @updatedAt
+}
+
+model HomeCollageItem {
+  id         String   @id @default(uuid())
+  mediaUrl   String
+  alt        String?
+  title      String?  @default("NEW CULTURE SLIDE")
+  subtitle   String?  @default("Visual Craft & Heritage")
+  badge      String?  @default("CULTURE")
+  buttonText String?  @default("View Story")
+  linkUrl    String?  @default("/work")
+  order      Int      @default(0)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+model HeroSlide {
+  id               String   @id @default(uuid())
+  title            String
+  subtitle         String?
+  tagline          String?  @default("CREATIVE DIRECTION")
+  mediaUrl         String
+  mediaType        String   @default("IMAGE")
+  ctaText          String?  @default("EXPLORE WORK")
+  ctaUrl           String?  @default("/work")
+  secondaryCtaText String?
+  secondaryCtaUrl  String?
+  order            Int      @default(0)
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+model BtsImage {
+  id        String   @id @default(uuid())
+  imageUrl  String
+  title     String?
+  caption   String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+
+model AboutPage {
+  id             String   @id @default(uuid())
+  heroTitle      String   @default("WEIRD ENERGY SINCE Y2K")
+  heroContent    String?  @default("We are a bold digital design and storytelling collective.")
+  backgroundUrl  String?
+  missionTitle   String   @default("WE MAKE PEOPLE FEEL SOMETHING")
+  missionBody    String?  @default("Crafting unforgettable visual identities, web experiences, and film.")
+  companyStory   String?  @default("Founded in 2020 to push digital boundaries.")
+  historyBody    String?
+  credentials    String?
+  certifications String?
+  ctaHeading     String?  @default("WORK WITH US")
+  ctaButtonText  String?  @default("GET IN TOUCH")
+  ctaButtonUrl   String?  @default("/contact")
+  updatedAt      DateTime @updatedAt
+}
+
+model Service {
+  id              String    @id @default(uuid())
+  title           String
+  slug            String    @unique
+  description     String
+  fullDescription String?
+  image           String?
+  hoverVideo      String?
+  category        String?   @default("CREATIVE")
+  tags            String?
+  order           Int       @default(0)
+  active          Boolean   @default(true)
+  status          String    @default("PUBLISHED")
+  publishedAt     DateTime? @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  seo             SEO?
+
+  @@index([slug])
+  @@index([category])
+  @@index([order])
+  @@index([active])
+  @@index([status])
+}
+
+model ProcessStep {
+  id          String   @id @default(uuid())
+  stepNumber  String
+  title       String
+  description String
+  media       String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+model PricingTier {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String   @unique
+  description   String
+  priceLabel    String
+  billingPeriod String   @default("project")
+  features      String
+  ctaText       String   @default("GET STARTED")
+  ctaUrl        String   @default("/contact")
+  featured      Boolean  @default(false)
+  active        Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([slug])
+  @@index([order])
+  @@index([active])
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  category  String   @default("General")
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+  @@index([category])
+  @@index([active])
+}
+
+model Testimonial {
+  id          String   @id @default(uuid())
+  name        String
+  designation String
+  company     String
+  quote       String
+  avatar      String?
+  logo        String?
+  rating      Int      @default(5)
+  order       Int      @default(0)
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  status      String   @default("PUBLISHED")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([order])
   @@index([featured])
+  @@index([active])
 }
 
+
 model Client {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  logoUrl   String?
-  website   String?
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  logo        String?
+  website     String?
+  description String?
+  featured    Boolean   @default(false)
+  order       Int       @default(0)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([slug])
+  @@index([order])
+  @@index([featured])
+  @@index([active])
+}
+
+model Work {
+  id              String        @id @default(uuid())
+  title           String
+  slug            String        @unique
+  client          String
+  category        String
+  year            String
+  description     String
+  fullDescription String?
+  heroMedia       String?
+  heroVideoUrl    String?
+  thumbnailUrl    String?
+  projectVideoUrl String?
+  projectUrl      String?
+  services        String?
+  strategy        String?
+  artDirection    String?
+  deliverables    String?
+  credits         String?
+  featured        Boolean       @default(false)
+  status          String        @default("PUBLISHED")
+  order           Int           @default(0)
+  publishedAt     DateTime?     @default(now())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  createdById     String?
+  createdBy       User?         @relation("WorkCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  updatedById     String?
+  updatedBy       User?         @relation("WorkUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  gallery         WorkGallery[]
+  seo             SEO?
+
+  @@index([slug])
+  @@index([featured])
+  @@index([order])
+  @@index([status])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model WorkGallery {
+  id        String   @id @default(uuid())
+  workId    String
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  mediaUrl  String
+  mediaType String   @default("IMAGE")
+  caption   String?
   order     Int      @default(0)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@index([order])
+  @@index([workId])
+  @@index([workId, order])
+}
+
+model Media {
+  id               String   @id @default(uuid())
+  filename         String
+  originalFilename String
+  mimeType         String
+  size             Int
+  width            Int?
+  height           Int?
+  duration         Int?
+  storageKey       String   @unique
+  url              String
+  altText          String?
+  title            String?
+  caption          String?
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([url])
+  @@index([mimeType])
+  @@index([storageKey])
+}
+
+model SEO {
+  id             String   @id @default(uuid())
+  pageIdentifier String?  @unique
+  title          String?
+  description    String?
+  keywords       String?
+  ogTitle        String?
+  ogDescription  String?
+  ogImage        String?
+  canonicalUrl   String?
+  noIndex        Boolean  @default(false)
+
+  workId         String?  @unique
+  work           Work?    @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  serviceId      String?  @unique
+  service        Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([workId])
+  @@index([serviceId])
+  @@index([pageIdentifier])
+}
+
+model ContactSubmission {
+  id             String    @id @default(uuid())
+  name           String
+  email          String
+  businessName   String?
+  helpDetails    String
+  budget         String?
+  consentGiven   Boolean   @default(false)
+  consentAt      DateTime?
+  consentVersion String?
+  consentPurpose String?
+  status         String    @default("NEW")
+  priority       String    @default("NORMAL")
+  notes          String?
+  ipAddress      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([createdAt])
 }

@@ -1,0 +1,30 @@
+
+.about-page {
+  position: relative;
+  width: 100%;
+}
+
+.about-page .about-hero-text {
+  will-change: transform, opacity;
+}
+
+.about-page .about-hero-card {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-page .mission-background-text {
+  user-select: none;
+  pointer-events: none;
+}
+
+.about-page .writeup-fg-text {
+  color: #000000;
+}
+
+.about-page .writeup-border {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.about-page .writeup-card-bg {
+  background-color: #ffffff;
+}

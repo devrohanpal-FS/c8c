@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="400" height="160">
+  <rect width="100%" height="100%" fill="transparent"/>
+  <g transform="translate(20, 25)">
+    <path d="M15 55 L35 15 L55 55 L75 15 L95 55" fill="none" stroke="#111111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="55" cy="35" r="6" fill="#ffd700"/>
+    <text x="115" y="46" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" letter-spacing="4" fill="#111111">WARIVO</text>
+    <text x="117" y="72" font-family="monospace" font-size="11" font-weight="700" letter-spacing="3" fill="#555555">ELECTRIC VEHICLES</text>
+  </g>
+</svg>
