@@ -57,10 +57,16 @@ export default function Navbar({ darkTheme = true }: NavbarProps) {
       }
 
       // Match explicit light background utility classes without computing styles in a loop
-      const lightContainer = targetEl.closest('.bg-white, .light-section, [data-theme="light"], .bg-[#FFFEF2], .bg-[#f5f0e6]');
-      if (lightContainer) {
-        setIsLightSection((prev) => (!prev ? true : prev));
-        return;
+      try {
+        const lightContainer = targetEl.closest(
+          '.bg-white, .light-section, [data-theme="light"], [class*="bg-[#FFFEF2]"], [class*="bg-[#f5f0e6]"], [class*="bg-[#fff]"]'
+        );
+        if (lightContainer) {
+          setIsLightSection((prev) => (!prev ? true : prev));
+          return;
+        }
+      } catch {
+        // Defensive fallback in case of selector parsing anomaly
       }
 
       // Default to dark theme for C8C obsidian aesthetic

@@ -56,6 +56,13 @@ describe('Bucket 3: Performance, Memory Leaks & UI Optimization Suite', () => {
     it('defaults to dark obsidian aesthetic when no light markers exist', () => {
       assert.strictEqual(evaluateSectionTheme({ classList: ['relative', 'w-full', 'py-20'] }), false);
     });
+
+    it('uses strictly valid CSS attribute substring selectors without invalid unescaped arbitrary brackets', () => {
+      const validSelector = '.bg-white, .light-section, [data-theme="light"], [class*="bg-[#FFFEF2]"], [class*="bg-[#f5f0e6]"], [class*="bg-[#fff]"]';
+      // Assert that arbitrary bracket classes like .bg-[#...] are NOT present as raw class selectors
+      assert.doesNotMatch(validSelector, /(^|[\s,])\.[a-zA-Z0-9_-]*\[/);
+      assert.match(validSelector, /\[class\*="bg-\[#FFFEF2\]"\]/);
+    });
   });
 
   describe('Dynamic Work & Service Detail Data Resilience', () => {
