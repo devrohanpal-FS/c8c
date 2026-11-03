@@ -3,10 +3,10 @@ import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { getNextAuthSecret } from '@/lib/env';
 
-const secret = getNextAuthSecret();
 const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
 
 export async function proxy(req: NextRequest) {
+  const secret = getNextAuthSecret();
   const { pathname } = req.nextUrl;
 
   // 1. Static asset fast-path (bypass middleware)

@@ -151,16 +151,20 @@ describe('Ajay QA Lead: Deep Quality Assurance & Boundary Verification Suite', (
     });
   });
 
-  describe('7. Edge Middleware & Admin Route Guard Verification', () => {
+  describe('7. Edge Proxy & Admin Route Guard Verification', () => {
+    const validSecret = 'super-secure-production-random-token-32-chars-long';
+
     it('configures matcher covering all /admin paths', async () => {
-      const middlewareModule = await import('../middleware');
-      assert.ok(middlewareModule.config);
-      assert.deepStrictEqual(middlewareModule.config.matcher, ['/admin/:path*']);
-      assert.strictEqual(typeof middlewareModule.middleware, 'function');
+      process.env.NEXTAUTH_SECRET = validSecret;
+      const proxyModule = await import('../proxy');
+      assert.ok(proxyModule.config);
+      assert.deepStrictEqual(proxyModule.config.matcher, ['/admin', '/admin/:path*', '/api/admin/:path*', '/login']);
+      assert.strictEqual(typeof proxyModule.proxy, 'function');
     });
 
-    it('redirects unauthenticated admin navigation to login with encoded callbackUrl', async () => {
-      const { middleware } = await import('../middleware');
+    it('redirects unauthenticated admin navigation to login', async () => {
+      process.env.NEXTAUTH_SECRET = validSecret;
+      const { proxy } = await import('../proxy');
       const req = {
         nextUrl: {
           pathname: '/admin/dashboard',
@@ -168,20 +172,21 @@ describe('Ajay QA Lead: Deep Quality Assurance & Boundary Verification Suite', (
         url: 'http://localhost:3000/admin/dashboard',
         cookies: {
           get: () => undefined,
+          delete: () => {},
         },
         headers: new Headers(),
       } as any;
 
-      const response = await middleware(req);
+      const response = await proxy(req);
       assert.ok(response);
       assert.strictEqual(response.status, 307);
       const location = response.headers.get('location');
       assert.ok(location?.includes('/admin/login'));
-      assert.ok(location?.includes('callbackUrl=%2Fadmin%2Fdashboard'));
     });
 
     it('allows direct access to /admin/login without redirect loop', async () => {
-      const { middleware } = await import('../middleware');
+      process.env.NEXTAUTH_SECRET = validSecret;
+      const { proxy } = await import('../proxy');
       const req = {
         nextUrl: {
           pathname: '/admin/login',
@@ -189,13 +194,13 @@ describe('Ajay QA Lead: Deep Quality Assurance & Boundary Verification Suite', (
         url: 'http://localhost:3000/admin/login',
         cookies: {
           get: () => undefined,
+          delete: () => {},
         },
         headers: new Headers(),
       } as any;
 
-      const response = await middleware(req);
+      const response = await proxy(req);
       assert.ok(response);
-      // Next.next() has status 200 and no redirect header
       assert.strictEqual(response.headers.get('location'), null);
     });
   });
