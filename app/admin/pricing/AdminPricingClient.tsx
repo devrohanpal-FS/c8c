@@ -54,8 +54,9 @@ export default function AdminPricingClient() {
       if (!res.ok) throw new Error("Failed to load pricing tiers");
       const data = await res.json();
       setTiers(data.tiers || []);
-    } catch (err: any) {
-      addToast("error", err.message || "Error fetching pricing tiers");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error fetching pricing tiers";
+      addToast("error", message);
     } finally {
       setLoading(false);
     }
@@ -133,8 +134,9 @@ export default function AdminPricingClient() {
       addToast("success", `Tier ${editingItem ? "updated" : "created"} successfully!`);
       setModalOpen(false);
       fetchTiers();
-    } catch (err: any) {
-      addToast("error", err.message || "Operation failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Operation failed";
+      addToast("error", message);
     } finally {
       setSubmitting(false);
     }
@@ -148,8 +150,9 @@ export default function AdminPricingClient() {
       addToast("success", "Pricing tier removed");
       setConfirmDeleteId(null);
       fetchTiers();
-    } catch (err: any) {
-      addToast("error", err.message || "Failed to delete");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to delete";
+      addToast("error", message);
     }
   };
 

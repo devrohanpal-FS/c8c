@@ -55,8 +55,9 @@ export const MediaPicker: React.FC<MediaPickerProps> = ({
       } else {
         alert(data.error || 'Upload failed');
       }
-    } catch (err: any) {
-      alert(err.message || 'File upload failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'File upload failed';
+      alert(message);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';

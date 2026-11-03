@@ -490,8 +490,25 @@ function ShowcaseCard({ work, index }: WorkCardProps) {
   );
 }
 
-interface WorkPageClientProps {
-  initialWorks?: any[];
+export interface WorkSummaryItem {
+  id: string;
+  title: string;
+  slug: string;
+  client: string;
+  category: string;
+  year?: string | null;
+  desc?: string | null;
+  media?: string | null;
+  heroMedia?: string | null;
+  thumbnailUrl?: string | null;
+  videoUrl?: string | null;
+  heroVideoUrl?: string | null;
+  projectVideoUrl?: string | null;
+  featured?: boolean;
+}
+
+export interface WorkPageClientProps {
+  initialWorks?: WorkSummaryItem[];
 }
 
 export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {}) {
@@ -499,7 +516,7 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
 
   const [dbWorks, setDbWorks] = useState<WorkItem[]>(() => {
     if (initialWorks && initialWorks.length > 0) {
-      return initialWorks.map((w: any, idx: number) => ({
+      return initialWorks.map((w: WorkSummaryItem, idx: number) => ({
         id: w.id || String(idx),
         number: String(idx + 1).padStart(2, '0'),
         title: w.title || '',
@@ -519,7 +536,7 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
       .then((res) => res.json())
       .then((data) => {
         if (data.works && Array.isArray(data.works) && data.works.length > 0) {
-          const mapped: WorkItem[] = data.works.map((w: any, idx: number) => ({
+          const mapped: WorkItem[] = data.works.map((w: WorkSummaryItem, idx: number) => ({
             id: w.id,
             number: String(idx + 1).padStart(2, '0'),
             title: w.title || '',

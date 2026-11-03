@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const slides = await HeroSlideService.getAllSlides(true);
     return NextResponse.json({ slides });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /api/hero-slides error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch slides' },

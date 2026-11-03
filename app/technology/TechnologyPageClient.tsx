@@ -208,9 +208,11 @@ function getCategoryIcon(iconName?: string) {
   }
 }
 
-interface TechnologyPageClientProps {
-  initialServices?: any[];
-  siteSettings?: any;
+import type { Service, SiteSettings } from '@prisma/client';
+
+export interface TechnologyPageClientProps {
+  initialServices?: Service[];
+  siteSettings?: SiteSettings | null;
 }
 
 export default function TechnologyPageClient({

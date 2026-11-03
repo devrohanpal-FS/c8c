@@ -31,6 +31,8 @@ export async function getPublishedHome() {
     ctaDescription: page?.ctaDescription || "Let's build something people won't stop talking about.",
     ctaButtonText: page?.ctaButtonText || 'START A PROJECT',
     ctaButtonUrl: page?.ctaButtonUrl || '/contact',
+    cultureTag: page?.cultureTag || 'THE CULTURE',
+    cultureTitle: page?.cultureTitle || 'BEHIND THE LENS BEYOND THE STORY',
     collage,
   };
 }
@@ -259,3 +261,10 @@ export async function getPublicSEO(pageIdentifier?: string) {
     },
   });
 }
+
+export type PublishedHomeData = Awaited<ReturnType<typeof getPublishedHome>>;
+export type PublishedAboutData = Awaited<ReturnType<typeof getPublishedAbout>>;
+export type PublishedWorkData = Awaited<ReturnType<typeof getPublishedWork>>;
+export type PublicSiteSettings = Awaited<ReturnType<typeof getPublicSiteSettings>>;
+export type PublishedPricingData = Awaited<ReturnType<typeof getPublishedPricing>>;
+export type PublishedFAQsData = Awaited<ReturnType<typeof getPublishedFAQs>>;

@@ -35,9 +35,10 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Unsupported preview entity type' }, { status: 400 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unauthorized preview session';
     return NextResponse.json(
-      { error: error.message || 'Unauthorized preview session' },
+      { error: message },
       { status: 401 }
     );
   }

@@ -23,10 +23,13 @@ export async function GET(
     }
 
     return NextResponse.json({ slide });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/sliders/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch slide' },
-      { status: 400 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch slide' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -61,10 +64,20 @@ export async function PATCH(
     });
 
     return NextResponse.json({ success: true, slide: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('PATCH /api/admin/sliders/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to update slide' },
-      { status: 400 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid slide input'
+          : 'Failed to update slide',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }
@@ -91,10 +104,13 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true, message: 'Slide deleted successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('DELETE /api/admin/sliders/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to delete slide' },
-      { status: 400 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to delete slide' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }

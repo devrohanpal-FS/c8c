@@ -64,7 +64,7 @@ export default function AdminAboutClient() {
           ctaButtonUrl: data.about.ctaButtonUrl || "/contact",
         });
       }
-    } catch (err: any) {
+    } catch (_err: unknown) {
       addToast("error", "Failed to load About Page content");
     } finally {
       setLoading(false);
@@ -97,8 +97,9 @@ export default function AdminAboutClient() {
       });
       if (!res.ok) throw new Error("Failed to save changes");
       addToast("success", "About page content updated successfully!");
-    } catch (err: any) {
-      addToast("error", err.message || "Save failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      addToast("error", message);
     } finally {
       setSaving(false);
     }

@@ -9,6 +9,7 @@ import { gsap } from '@/lib/gsap';
 
 import PageWrapper from '@/components/PageWrapper';
 import ClientLogosSection from '@/app/ClientLogosSection';
+import type { Service, ProcessStep, Testimonial, Client, SiteSettings } from '@prisma/client';
 import './Services.css';
 
 function SafeCollageImage({
@@ -223,12 +224,49 @@ const defaultProcessRows = [
   },
 ];
 
-interface ServicesPageClientProps {
-  initialServices?: any[];
-  processSteps?: any[];
-  testimonials?: any[];
-  clients?: any[];
-  siteSettings?: any;
+export interface ServiceItem {
+  id: string;
+  title: string;
+  name?: string;
+  slug: string;
+  desc?: string;
+  description?: string;
+  tagline?: string;
+  fullDesc?: string | null;
+  image?: string | null;
+  video?: string | null;
+  hoverVideo?: string | null;
+  hoverVideoUrl?: string | null;
+}
+
+export interface ProcessItem {
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface TestimonialItem {
+  id?: string;
+  name: string;
+  designation: string;
+  company: string;
+  quote: string;
+  avatar?: string | null;
+}
+
+export interface ClientMiniItem {
+  id: string;
+  name: string;
+  logo?: string | null;
+  website?: string | null;
+}
+
+export interface ServicesPageClientProps {
+  initialServices?: ServiceItem[];
+  processSteps?: ProcessItem[];
+  testimonials?: TestimonialItem[];
+  clients?: ClientMiniItem[];
+  siteSettings?: SiteSettings | null;
 }
 
 export default function ServicesPageClient({
@@ -240,9 +278,9 @@ export default function ServicesPageClient({
   const containerRef = useRef<HTMLDivElement>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
 
-  const [dbServices, setDbServices] = useState<any[]>(initialServices || []);
-  const [testimonials, setTestimonials] = useState<any[]>(initialTestimonials || []);
-  const [clients, setClients] = useState<any[]>(initialClients || []);
+  const [dbServices, setDbServices] = useState<ServiceItem[]>(initialServices || []);
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials || []);
+  const [clients, setClients] = useState<ClientMiniItem[]>(initialClients || []);
 
   useEffect(() => {
     fetch('/api/public/services?category=CREATIVE')
@@ -277,8 +315,8 @@ export default function ServicesPageClient({
     dbServices.length > 0
       ? dbServices.map((s, idx) => ({
         id: s.id,
-        slug: s.slug || s.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        title: s.title || s.name,
+        slug: s.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : `service-${idx + 1}`),
+        title: s.title || s.name || 'Creative Service',
         isSerif: idx % 2 === 1,
         videoUrl: s.video || s.hoverVideo || s.hoverVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
         imageUrl: s.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
@@ -472,7 +510,7 @@ export default function ServicesPageClient({
             </div>
 
             <div className="flex flex-col">
-              {activeProcessRows.map((row: any) => (
+              {activeProcessRows.map((row: ProcessItem) => (
                 <div
                   key={row.number}
                   className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start py-12 border-b border-black/15 group hover:bg-black/[0.02] transition-colors duration-300"
@@ -513,6 +551,7 @@ export default function ServicesPageClient({
             <div className="max-w-5xl flex flex-col gap-12">
               {(testimonials && testimonials.length > 0 ? testimonials : [
                 {
+                  id: 'default-testimonial',
                   quote: "Working with Cre8tiveCove was easily the most seamless and rewarding creative partnership our marketing team has ever experienced. They took a complex message and turned it into an award-winning campaign that crushed our conversion metrics.",
                   name: "SARAH JENKINS",
                   designation: "VP OF BRAND MARKETING",

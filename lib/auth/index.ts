@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
+import { prisma } from '@/lib/db';
 
 export interface AuthSessionUser {
   id: string;
@@ -19,9 +20,28 @@ export async function getCurrentUser(): Promise<AuthSessionUser | null> {
 }
 
 export async function requireAuthUser(): Promise<AuthSessionUser> {
-  const user = await getCurrentUser();
-  if (!user) {
+  const sessionUser = await getCurrentUser();
+  if (!sessionUser || !sessionUser.id) {
     throw new Error('Unauthorized access: User session required.');
   }
-  return user;
+
+  // Active session verification against database to revoke suspended or deleted user tokens immediately
+  const dbUser = await prisma.user.findFirst({
+    where: {
+      id: sessionUser.id,
+      deletedAt: null,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+
+  if (!dbUser) {
+    throw new Error('Unauthorized access: User account has been deactivated or not found.');
+  }
+
+  return dbUser;
 }

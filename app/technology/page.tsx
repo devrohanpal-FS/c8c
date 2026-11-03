@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
 import TechnologyPageClient from './TechnologyPageClient';
+import type { Service, SiteSettings } from '@prisma/client';
 
 export const revalidate = 300; // Incremental Static Regeneration (5 minutes)
 
@@ -24,8 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TechnologyPage() {
-  let techServices: any[] = [];
-  let siteSettings: any = null;
+  let techServices: Service[] = [];
+  let siteSettings: SiteSettings | null = null;
 
   try {
     const [servicesData, settings] = await Promise.all([

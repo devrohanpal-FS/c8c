@@ -45,8 +45,9 @@ export default function AdminProcessClient() {
       if (!res.ok) throw new Error("Failed to load process steps");
       const data = await res.json();
       setSteps(data.steps || []);
-    } catch (err: any) {
-      addToast("error", err.message || "Error fetching process steps");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error fetching process steps";
+      addToast("error", message);
     } finally {
       setLoading(false);
     }
@@ -100,8 +101,9 @@ export default function AdminProcessClient() {
       addToast("success", `Step ${editingItem ? "updated" : "created"} successfully!`);
       setModalOpen(false);
       fetchSteps();
-    } catch (err: any) {
-      addToast("error", err.message || "Operation failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Operation failed";
+      addToast("error", message);
     } finally {
       setSubmitting(false);
     }
@@ -115,8 +117,9 @@ export default function AdminProcessClient() {
       addToast("success", "Process step removed");
       setConfirmDeleteId(null);
       fetchSteps();
-    } catch (err: any) {
-      addToast("error", err.message || "Failed to delete");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to delete";
+      addToast("error", message);
     }
   };
 

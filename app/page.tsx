@@ -1,6 +1,11 @@
-import HomePageClient from './HomePageClient';
+import HomePageClient, { HomePageData } from './HomePageClient';
 import { prisma } from '@/lib/db';
 import { Metadata } from 'next';
+import type { SiteSettings } from '@prisma/client';
+import type { HeroSlideData } from '@/components/HeroBannerSlider';
+import type { WorkProject } from '@/components/WorkCard';
+import type { CultureSlideItem } from '@/app/ImageCollageStrip';
+import type { ClientItem } from '@/app/ClientLogosSection';
 
 export const revalidate = 300; // Incremental Static Regeneration (5 minutes) with on-demand CMS revalidation
 
@@ -27,12 +32,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  let homeContent: any = null;
-  let featuredWorks: any[] = [];
-  let collageItems: any[] = [];
-  let clients: any[] = [];
-  let siteSettings: any = null;
-  let heroSlides: any[] = [];
+  let homeContent: HomePageData | null = null;
+  let featuredWorks: WorkProject[] = [];
+  let collageItems: CultureSlideItem[] = [];
+  let clients: ClientItem[] = [];
+  let siteSettings: SiteSettings | null = null;
+  let heroSlides: HeroSlideData[] = [];
 
   try {
     const [data, works, collage, clientData, settings, slidesData] = await Promise.all([
@@ -59,19 +64,17 @@ export default async function HomePage() {
     ]);
 
     if (slidesData && slidesData.length > 0) {
-      heroSlides = slidesData.map((s: any) => ({
+      heroSlides = slidesData.map((s) => ({
         id: s.id,
         title: s.title,
-        subtitle: s.subtitle,
-        tagline: s.tagline,
+        subtitle: s.subtitle || undefined,
+        tagline: s.tagline || undefined,
         mediaUrl: s.mediaUrl,
-        mediaType: s.mediaType,
-        ctaText: s.ctaText,
-        ctaUrl: s.ctaUrl,
-        secondaryCtaText: s.secondaryCtaText,
-        secondaryCtaUrl: s.secondaryCtaUrl,
-        order: s.order,
-        active: s.active,
+        mediaType: s.mediaType as 'IMAGE' | 'VIDEO',
+        ctaText: s.ctaText || undefined,
+        ctaUrl: s.ctaUrl || undefined,
+        secondaryCtaText: s.secondaryCtaText || undefined,
+        secondaryCtaUrl: s.secondaryCtaUrl || undefined,
       }));
     }
 
@@ -94,7 +97,7 @@ export default async function HomePage() {
       };
     }
 
-    featuredWorks = works.map((w: any) => {
+    featuredWorks = works.map((w) => {
       const galleryVideo = w.gallery && w.gallery.length > 0 ? w.gallery[0].mediaUrl : null;
       const vUrl = w.heroVideoUrl || w.projectVideoUrl || galleryVideo || 'https://vjs.zencdn.net/v/oceans.mp4';
       return {
@@ -108,17 +111,14 @@ export default async function HomePage() {
       };
     });
 
-    collageItems = collage.map((c: any) => ({
+    collageItems = collage.map((c) => ({
       id: c.id,
-      title: c.title || null,
-      subtitle: c.subtitle || null,
+      title: c.title || '',
+      subtitle: c.subtitle || '',
       badge: c.badge || 'BTS',
       buttonText: c.buttonText || 'View Photo',
       linkUrl: c.linkUrl || c.mediaUrl,
       mediaUrl: c.mediaUrl,
-      alt: c.alt || 'BTS Photo',
-      order: c.order,
-      active: c.active,
     }));
 
     clients = clientData.map((cl) => ({

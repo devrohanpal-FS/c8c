@@ -46,10 +46,20 @@ async function handleUpdate(req: Request, id: string) {
     });
 
     return NextResponse.json({ step: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('PATCH /api/admin/process/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to update process step' },
-      { status: 500 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid process step input'
+          : 'Failed to update process step',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }
@@ -78,10 +88,13 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true, step: deleted });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('DELETE /api/admin/process/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to delete process step' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to delete process step' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }

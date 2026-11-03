@@ -30,9 +30,10 @@ export async function GET() {
     });
 
     return NextResponse.json({ home: homeData, collageItems });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /api/admin/home error:', error);
-    const isAuth = error?.message === 'Unauthorized';
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg === 'Unauthorized';
     return NextResponse.json(
       { error: isAuth ? 'Unauthorized' : 'Failed to fetch Home Page content' },
       { status: isAuth ? 401 : 500 }
@@ -69,55 +70,61 @@ export async function PUT(req: Request) {
       cultureTitle: homeData.cultureTitle || 'BEHIND THE LENS BEYOND THE STORY',
     };
 
-    const existing = await prisma.homePage.findFirst();
+    const transactionResult = await prisma.$transaction(async (tx) => {
+      const existing = await tx.homePage.findFirst();
 
-    const updated = existing
-      ? await prisma.homePage.update({
-          where: { id: existing.id },
-          data: dataToSave,
-        })
-      : await prisma.homePage.create({
-          data: dataToSave,
-        });
+      const updated = existing
+        ? await tx.homePage.update({
+            where: { id: existing.id },
+            data: dataToSave,
+          })
+        : await tx.homePage.create({
+            data: dataToSave,
+          });
 
-    if (Array.isArray(collageItems)) {
-      await prisma.homeCollageItem.deleteMany();
-      if (collageItems.length > 0) {
-        await prisma.homeCollageItem.createMany({
-          data: collageItems.map((item, idx: number) => ({
-            mediaUrl: item.mediaUrl || '',
-            alt: item.alt || '',
-            title: item.title || item.alt || `CULTURE SLIDE #${idx + 1}`,
-            subtitle: item.subtitle || 'Visual Craft & Heritage',
-            badge: item.badge || `0${idx + 1} CULTURE`,
-            buttonText: item.buttonText || 'View Story',
-            linkUrl: item.linkUrl || '/work',
-            order: item.order ?? idx + 1,
-            active: item.active ?? true,
-          })),
-        });
+      if (Array.isArray(collageItems)) {
+        await tx.homeCollageItem.deleteMany();
+        if (collageItems.length > 0) {
+          await tx.homeCollageItem.createMany({
+            data: collageItems.map((item, idx: number) => ({
+              mediaUrl: item.mediaUrl || '',
+              alt: item.alt || '',
+              title: item.title || item.alt || `CULTURE SLIDE #${idx + 1}`,
+              subtitle: item.subtitle || 'Visual Craft & Heritage',
+              badge: item.badge || `0${idx + 1} CULTURE`,
+              buttonText: item.buttonText || 'View Story',
+              linkUrl: item.linkUrl || '/work',
+              order: item.order ?? idx + 1,
+              active: item.active ?? true,
+            })),
+          });
+        }
       }
-    }
 
-    const updatedCollage = await prisma.homeCollageItem.findMany({
-      orderBy: { order: 'asc' },
+      const updatedCollage = await tx.homeCollageItem.findMany({
+        orderBy: { order: 'asc' },
+      });
+
+      return { home: updated, collageItems: updatedCollage };
     });
 
     await AuditService.log({
       userId: user.id,
       action: 'UPDATE_HOME_PAGE',
       entity: 'HomePage',
-      entityId: updated.id,
+      entityId: transactionResult.home.id,
       details: { ...dataToSave, collageItemsCount: collageItems?.length ?? 0 },
     });
 
-    return NextResponse.json({ home: updated, collageItems: updatedCollage });
-  } catch (error: any) {
+    return NextResponse.json(transactionResult);
+  } catch (error: unknown) {
     console.error('PUT /api/admin/home error:', error);
-    const isValidation = error?.name === 'ZodError';
-    const isAuth = error?.message === 'Unauthorized';
+    const errName = error instanceof Error ? error.name : '';
+    const errMsg = error instanceof Error ? error.message : '';
+    const isValidation = errName === 'ZodError';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: isAuth ? 'Unauthorized' : (isValidation ? 'Invalid home page content' : 'Failed to update Home Page content') },
+      { error: isAuth ? 'Unauthorized access' : (isValidation ? 'Invalid home page content' : 'Failed to update Home Page content') },
       { status: isAuth ? 401 : (isValidation ? 400 : 500) }
     );
   }

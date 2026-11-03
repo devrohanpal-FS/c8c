@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const btsImages = await BtsService.getAllBts(true);
     return NextResponse.json({ btsImages });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /api/bts error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch BTS images' },

@@ -41,10 +41,13 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('DELETE /api/admin/media/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to delete media asset' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to delete media asset' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }

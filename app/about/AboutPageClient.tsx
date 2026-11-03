@@ -7,8 +7,9 @@ import { useGSAP } from '@gsap/react';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import PageWrapper from '@/components/PageWrapper';
 import SectionWrapper from '@/components/SectionWrapper';
-import ClientLogosSection from '@/app/ClientLogosSection';
+import ClientLogosSection, { ClientItem } from '@/app/ClientLogosSection';
 import { parseVideoUrl } from '@/lib/utils';
+import type { SiteSettings } from '@prisma/client';
 import './About.css';
 
 const statsData = [
@@ -18,10 +19,25 @@ const statsData = [
   { value: '300+ Productions', label: 'COMPLETED FILMS' },
 ];
 
+export interface AboutPageData {
+  heroTitle?: string | null;
+  heroContent?: string | null;
+  backgroundUrl?: string | null;
+  missionTitle?: string | null;
+  missionBody?: string | null;
+  companyStory?: string | null;
+  historyBody?: string | null;
+  credentials?: string | string[] | null;
+  certifications?: string | string[] | null;
+  ctaHeading?: string | null;
+  ctaButtonText?: string | null;
+  ctaButtonUrl?: string | null;
+}
+
 export interface AboutPageClientProps {
-  cmsAbout?: any;
-  clients?: any[];
-  siteSettings?: any;
+  cmsAbout?: AboutPageData | null;
+  clients?: ClientItem[];
+  siteSettings?: SiteSettings | null;
 }
 
 export default function AboutPageClient({ cmsAbout, clients, siteSettings }: AboutPageClientProps = {}) {
@@ -97,7 +113,6 @@ export default function AboutPageClient({ cmsAbout, clients, siteSettings }: Abo
 
       const missionEl = document.getElementById('ourmission');
       const writeupEl = document.getElementById('writeup');
-      const statsEl = document.getElementById('stats');
 
       if (missionEl && writeupEl) {
         const missionBgText = missionEl.querySelectorAll('.mission-background-text');

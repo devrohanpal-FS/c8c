@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
-import { canManageSettings } from "@/lib/permissions";
+import { canViewAuditLogs } from "@/lib/permissions";
 import { getAuditLogsService } from "@/lib/services";
 
 export const dynamic = 'force-dynamic';
@@ -10,8 +10,8 @@ export async function GET(req: NextRequest) {
   try {
     const user = await requireAuthUser();
 
-    if (!canManageSettings(user.role)) {
-      return NextResponse.json({ error: "Forbidden: Super Admin access required" }, { status: 403 });
+    if (!canViewAuditLogs(user.role)) {
+      return NextResponse.json({ error: "Forbidden: Administrator privilege required to view audit logs" }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -30,11 +30,12 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET /api/admin/audit-logs error:", error);
-    const isAuth = error?.message === "Unauthorized";
+    const errMsg = error instanceof Error ? error.message : "";
+    const isAuth = errMsg.includes("Unauthorized");
     return NextResponse.json(
-      { error: isAuth ? "Unauthorized" : "Failed to fetch audit logs" },
+      { error: isAuth ? "Unauthorized access" : "Failed to fetch audit logs" },
       { status: isAuth ? 401 : 500 }
     );
   }

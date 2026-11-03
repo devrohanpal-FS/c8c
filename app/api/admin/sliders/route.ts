@@ -16,10 +16,13 @@ export async function GET() {
 
     const slides = await HeroSlideService.getAllSlides(false);
     return NextResponse.json({ slides });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/sliders error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch hero slides' },
-      { status: 401 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch hero slides' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -64,10 +67,20 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, slide: newSlide }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/sliders error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create hero slide' },
-      { status: 400 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid hero slide input'
+          : 'Failed to create hero slide',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

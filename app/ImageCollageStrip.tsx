@@ -98,7 +98,7 @@ function CollageSlideImage({
 }
 
 export interface ImageCollageStripProps {
-  items?: any[];
+  items?: CultureSlideItem[];
   cultureTag?: string;
   cultureTitle?: string;
 }
@@ -490,15 +490,17 @@ export default function ImageCollageStrip({
           >
             <X size={24} />
           </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={lightboxUrl}
-            alt="Behind The Scenes Still"
-            className="max-w-[94vw] max-h-[88vh] object-contain rounded-2xl shadow-2xl border border-white/20"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/stock/stock-bts.jpg';
-            }}
-          />
+          <div className="relative max-w-[94vw] max-h-[88vh] w-[90vw] h-[80vh] flex items-center justify-center pointer-events-none">
+            <Image
+              src={lightboxUrl}
+              alt="Behind The Scenes Still"
+              fill
+              sizes="94vw"
+              priority
+              className="object-contain rounded-2xl shadow-2xl border border-white/20 pointer-events-auto"
+              unoptimized={lightboxUrl.startsWith('data:') || lightboxUrl.startsWith('blob:')}
+            />
+          </div>
         </div>
       )}
     </section>

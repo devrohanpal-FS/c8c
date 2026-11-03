@@ -20,10 +20,13 @@ export async function GET() {
     });
 
     return NextResponse.json({ steps });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/process error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch process steps' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch process steps' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -59,10 +62,20 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ step: created }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/process error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create process step' },
-      { status: 500 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid process step input'
+          : 'Failed to create process step',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

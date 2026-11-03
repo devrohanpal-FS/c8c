@@ -60,8 +60,9 @@ export default function AdminSeoClient() {
         });
       }
       setSeoMap(map);
-    } catch (err: any) {
-      addToast("error", err.message || "Error fetching SEO data");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error fetching SEO data";
+      addToast("error", message);
     } finally {
       setLoading(false);
     }
@@ -98,8 +99,9 @@ export default function AdminSeoClient() {
       if (!res.ok) throw new Error("Failed to save SEO settings");
       addToast("success", `SEO settings for ${activePage} saved successfully!`);
       fetchSeo();
-    } catch (err: any) {
-      addToast("error", err.message || "Save failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      addToast("error", message);
     } finally {
       setSaving(false);
     }

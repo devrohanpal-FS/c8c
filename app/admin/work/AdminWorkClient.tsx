@@ -29,6 +29,9 @@ interface Work {
   description: string;
   heroMedia?: string | null;
   video?: string | null;
+  heroVideoUrl?: string | null;
+  thumbnailUrl?: string | null;
+  projectVideoUrl?: string | null;
   gallery?: WorkGalleryItem[];
   featured: boolean;
   status: string;
@@ -305,21 +308,21 @@ export default function AdminWorkClient({ autoOpenNew, editId }: AdminWorkClient
           </button>
           <button
             onClick={() => {
-              const existingGallery = (w as any).gallery && (w as any).gallery.length > 0
-                ? (w as any).gallery.map((g: any) => ({
+              const existingGallery = w.gallery && w.gallery.length > 0
+                ? w.gallery.map((g: WorkGalleryItem) => ({
                     id: g.id,
                     mediaUrl: g.mediaUrl,
                     mediaType: g.mediaType || 'VIDEO',
                     caption: g.caption || '',
                   }))
-                : (w as any).heroVideoUrl || w.video
-                ? [{ mediaUrl: (w as any).heroVideoUrl || w.video, mediaType: 'VIDEO', caption: 'Main Broadcast Film Cut' }]
+                : w.heroVideoUrl || w.video
+                ? [{ mediaUrl: w.heroVideoUrl || w.video || '', mediaType: 'VIDEO', caption: 'Main Broadcast Film Cut' }]
                 : [];
 
               setEditingWork({
                 ...w,
-                heroMedia: w.heroMedia || (w as any).thumbnailUrl,
-                video: (w as any).heroVideoUrl || (w as any).projectVideoUrl || w.video,
+                heroMedia: w.heroMedia || w.thumbnailUrl,
+                video: w.heroVideoUrl || w.projectVideoUrl || w.video,
                 gallery: existingGallery,
               });
               setIsModalOpen(true);

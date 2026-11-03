@@ -4,9 +4,10 @@ import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from '@/lib/gsap';
 import HeroBannerSlider, { HeroSlideData } from '@/components/HeroBannerSlider';
+import type { HomePageData } from '@/app/HomePageClient';
 
 interface HeroSectionProps {
-  cmsContent?: any;
+  cmsContent?: HomePageData | null;
   heroSlides?: HeroSlideData[];
 }
 
@@ -64,7 +65,7 @@ export default function HeroSection({ cmsContent, heroSlides }: HeroSectionProps
 
       {/* 2. Main Headline ("Featured Work") */}
       <div
-        id="heding-section"
+        id="heading-section"
         ref={headlineContainerRef}
         className="max-w-6xl mx-auto text-center flex flex-col items-center pt-24 pb-14 px-6 md:px-12 will-change-transform"
       >

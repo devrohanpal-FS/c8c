@@ -121,8 +121,9 @@ export default function AdminBtsClient() {
       addToast('success', isEdit ? 'BTS photo updated!' : 'New BTS photo added!');
       handleCloseModal();
       fetchItems();
-    } catch (err: any) {
-      addToast('error', err.message || 'Save failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Save failed';
+      addToast('error', message);
     } finally {
       setSaving(false);
     }
@@ -137,8 +138,9 @@ export default function AdminBtsClient() {
 
       addToast('success', 'BTS photo deleted');
       fetchItems();
-    } catch (err: any) {
-      addToast('error', err.message || 'Delete failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Delete failed';
+      addToast('error', message);
     }
   };
 

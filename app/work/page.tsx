@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import WorkPageClient from './WorkPageClient';
+import WorkPageClient, { WorkSummaryItem } from './WorkPageClient';
 import { WorkService } from '@/lib/services/workService';
 import { prisma } from '@/lib/db';
 
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function WorkPage() {
-  let cmsWorks: any[] = [];
+  let cmsWorks: WorkSummaryItem[] = [];
   try {
     const data = await WorkService.getAllWorks({ publishedOnly: true });
     cmsWorks = data.map((w) => ({
