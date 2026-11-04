@@ -57,7 +57,7 @@ const SERVICE_GROUPS = [
 export default function ContactPageClient({ siteSettings }: ContactPageClientProps = {}) {
   const contactEmail = siteSettings?.email || 'hello@cre8tivecove.com';
   const contactAddress = siteSettings?.address || 'Delhi, India';
-  const [contactImg, setContactImg] = useState('/uploads/media_1793098928568_299c025bf8c66802.png');
+  const [contactImg, setContactImg] = useState('/images/stock/stock-work.jpg');
   const [formData, setFormData] = useState({
     name: '',
     email: '',

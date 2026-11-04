@@ -14,7 +14,7 @@ interface NavItem {
   label: string;
   href: string;
   subtitle: string;
-  image: string;
+  image?: string;
 }
 
 const navItems: NavItem[] = [
@@ -24,7 +24,7 @@ const navItems: NavItem[] = [
     label: 'HOME',
     href: '/',
     subtitle: 'Main Creative Agency Hub',
-    image: '/uploads/media_1793099349899_5f4c8c00b55fe46c.webp',
+    image: '',
   },
   {
     id: 'work',
@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     label: 'WORK',
     href: '/work',
     subtitle: 'Archive of Commercial Films & Digital Crafts',
-    image: '/uploads/media_1789716925770_1926afe5529db945.webp',
+    image: '',
   },
   {
     id: 'about',
@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
     label: 'ABOUT',
     href: '/about',
     subtitle: 'Manifesto, Culture & Creative Ethos',
-    image: '/uploads/media_1793102157860_c5dc0194593ee8f6.png',
+    image: '',
   },
   {
     id: 'services',
@@ -48,7 +48,7 @@ const navItems: NavItem[] = [
     label: 'SERVICES',
     href: '/services',
     subtitle: 'Direction, 3D WebGL & Motion Art',
-    image: '/uploads/media_1793103862506_0e02f2bf93f7ee2a.jpg',
+    image: '',
   },
   {
     id: 'technology',
@@ -56,7 +56,7 @@ const navItems: NavItem[] = [
     label: 'TECHNOLOGY',
     href: '/technology',
     subtitle: 'Web, Mobile, AI Agents & Virtual Tours',
-    image: '/uploads/media_1789645284182_7ee3f75c6acdfd77.png',
+    image: '',
   },
   {
     id: 'contact',
@@ -64,7 +64,7 @@ const navItems: NavItem[] = [
     label: 'CONTACT',
     href: '/contact',
     subtitle: 'Start a Project & General Inquiries',
-    image: '/uploads/media_1793098928568_299c025bf8c66802.png',
+    image: '',
   },
 ];
 
@@ -386,14 +386,23 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
                         : 'opacity-0 scale-105 pointer-events-none z-0'
                     }`}
                   >
-                    <Image
-                      src={item.image}
-                      alt={item.label}
-                      fill
-                      sizes="(max-width: 1200px) 100vw, 45vw"
-                      className="object-cover"
-                      priority={item.id === 'home'}
-                    />
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.label}
+                        fill
+                        sizes="(max-width: 1200px) 100vw, 45vw"
+                        className="object-cover"
+                        priority={item.id === 'home'}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#181818] via-[#0d0d0d] to-[#050505] flex items-center justify-center p-8 text-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,215,0,0.08)_0%,transparent_75%)]" />
+                        <span className="font-condensed text-5xl lg:text-7xl font-black text-white/10 uppercase tracking-widest select-none">
+                          {item.label}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 );
               })}

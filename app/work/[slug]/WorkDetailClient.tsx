@@ -96,12 +96,7 @@ function buildWorkDetail(dbWork: DbWorkEntity, slug: string): FeaturedWorkDetail
     quote: fallback?.quote,
     services: dbWork.services ? dbWork.services.split(',').map((s: string) => s.trim()) : (fallback?.services || ['Commercial Direction']),
     credits: dbWork.credits || fallback?.credits || 'Creative Direction & Production: Cre8tiveCove Team',
-    nextProject: fallback?.nextProject || {
-      slug: 'warivo-new-ev-scooter',
-      title: 'WARIVO NEW EV SCOOTER',
-      category: 'Automotive & Product Launch',
-      thumbnailUrl: '/uploads/media_1790317167178_9f8fd034136f906b.webp',
-    },
+    nextProject: fallback?.nextProject || undefined,
   };
 }
 
@@ -256,12 +251,7 @@ export const WorkDetailClient: React.FC<WorkDetailClientProps> = ({ slug, initia
               ? dbWork.services.split(',').map((s: string) => s.trim())
               : (fallback?.services || ['Creative Concept Development', 'Production & Post-Production', 'Animation & VFX', 'Scriptwriting']),
             credits: dbWork.credits || fallback?.credits,
-            nextProject: fallback?.nextProject || {
-              slug: 'skyla-credit-union',
-              title: 'SKYLA CREDIT UNION',
-              category: 'Brand Strategy & Film',
-              thumbnailUrl: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80'
-            }
+            nextProject: fallback?.nextProject || undefined,
           };
           setWorkData(merged);
         } else if (fallback) {
