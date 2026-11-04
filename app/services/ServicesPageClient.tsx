@@ -113,117 +113,6 @@ function ServiceVideoText({
   );
 }
 
-const defaultServiceItems = [
-  {
-    id: 's1',
-    slug: 'brand-identity',
-    title: 'Brand Identity & Creative Strategy',
-    isSerif: false,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    imageUrl: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=1200&q=80',
-    number: '01',
-    tagline: 'Master Logo Suite • Brand Guidelines Manual • Typography & Color Tokens',
-  },
-  {
-    id: 's2',
-    slug: 'cgi-3d-motion-design',
-    title: 'CGI & 3D Motion Design',
-    isSerif: false,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-    number: '02',
-    tagline: 'High-Resolution 3D Renders • 3D Motion Video Clips • Interactive 3D Assets',
-  },
-  {
-    id: 's3',
-    slug: 'video-production',
-    title: 'Video Production & Commercial Shoots',
-    isSerif: false,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-    imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80',
-    number: '03',
-    tagline: 'Master Broadcast Film • Social Media Edits • Behind-The-Scenes Cut',
-  },
-  {
-    id: 's4',
-    slug: 'ai-ads-creatives',
-    title: 'AI Ads & Creatives',
-    isSerif: false,
-    videoUrl: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-    number: '04',
-    tagline: 'Generative Visuals • Hyper-Targeted Ad Creatives • AI Video Production • Rapid Iteration',
-  },
-  {
-    id: 's5',
-    slug: 'event-coverage-content-production',
-    title: 'Event Coverage & Content Production',
-    isSerif: false,
-    videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
-    imageUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80',
-    number: '05',
-    tagline: 'Keynote & Panel Filming • Same-Day Social Reels • Highlight Films • Multi-Cam Live Feeds',
-  },
-  {
-    id: 's6',
-    slug: 'digital-content-campaign-strategy',
-    title: 'Digital Content & Campaign Strategy',
-    isSerif: false,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
-    number: '06',
-    tagline: 'Omnichannel Campaign Strategy • Social Media Visuals • Infographics & Carousels • High-Converting Ad Copy',
-  },
-];
-
-const defaultProcessRows = [
-  {
-    number: '01',
-    title: 'Research\n& Strategy',
-    description: 'We don’t just shoot scripts; we figure out why people will want to watch them.',
-  },
-  {
-    number: '02',
-    title: 'Concept &\nScriptwriting',
-    description: 'Leaning on the research, we craft a storyline that paves the way for your product or service to swoop in for the save.',
-  },
-  {
-    number: '03',
-    title: 'Art Direction\n& Design',
-    description: 'Our designers make sure all your assets are artfully connected so your campaign feels like an extension of your brand.',
-  },
-  {
-    number: '04',
-    title: 'Cast\nTalent',
-    description: 'Whether we’re casting in Atlanta or Charlotte, NYC or LA, our director encourages actors to bring the unexpected to the table.',
-  },
-  {
-    number: '05',
-    title: 'Location',
-    description: 'With the help of scouts and years of collecting fave locales, we determine where the most “wow” can happen.',
-  },
-  {
-    number: '06',
-    title: 'Pre-production',
-    description: 'Whether your project is a one-day shoot or a weeklong production, we strategically match our A-list crew and equipment to your needs.',
-  },
-  {
-    number: '07',
-    title: 'Shoot Day',
-    description: 'Welcome to game day. It’s time to serve up the perfect cocktail of Zen and excitement.',
-  },
-  {
-    number: '08',
-    title: 'Edit, Post\n& VFX',
-    description: 'Now our editors create multiple storylines to best capture your script. VFX team is on deck to create surreal kingdoms.',
-  },
-  {
-    number: '09',
-    title: 'Release it\ninto the wild',
-    description: 'We hand over your baby. Standing by to give you additional cuts, new renditions, whatever you need to maximize your investment.',
-  },
-];
-
 export interface ServiceItem {
   id: string;
   title: string;
@@ -312,20 +201,18 @@ export default function ServicesPageClient({
   }, []);
 
   const activeServiceItems =
-    dbServices.length > 0
-      ? dbServices.map((s, idx) => ({
-        id: s.id,
-        slug: s.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : `service-${idx + 1}`),
-        title: s.title || s.name || 'Creative Service',
-        isSerif: idx % 2 === 1,
-        videoUrl: s.video || s.hoverVideo || s.hoverVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
-        imageUrl: s.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-        number: String(idx + 1).padStart(2, '0'),
-        tagline: s.description || s.tagline || 'Specialized Creative Capability',
-      }))
-      : defaultServiceItems;
+    dbServices.map((s, idx) => ({
+      id: s.id,
+      slug: s.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : `service-${idx + 1}`),
+      title: s.title || s.name || 'Creative Service',
+      isSerif: idx % 2 === 1,
+      videoUrl: s.video || s.hoverVideo || s.hoverVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
+      imageUrl: s.image || '/images/stock/stock-service.jpg',
+      number: String(idx + 1).padStart(2, '0'),
+      tagline: s.description || s.tagline || 'Specialized Creative Capability',
+    }));
 
-  const activeProcessRows = defaultProcessRows;
+  const activeProcessRows = processSteps || [];
 
   useGSAP(
     () => {

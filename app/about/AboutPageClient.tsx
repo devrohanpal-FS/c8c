@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Play, Sparkles, X } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
@@ -11,13 +11,6 @@ import ClientLogosSection, { ClientItem } from '@/app/ClientLogosSection';
 import { parseVideoUrl } from '@/lib/utils';
 import type { SiteSettings } from '@prisma/client';
 import './About.css';
-
-const statsData = [
-  { value: '23 years', label: 'IN BUSINESS' },
-  { value: '100+ Clients', label: 'WORLDWIDE' },
-  { value: '200+ Awards', label: 'CREATIVE EXCELLENCE' },
-  { value: '300+ Productions', label: 'COMPLETED FILMS' },
-];
 
 export interface AboutPageData {
   heroTitle?: string | null;
@@ -47,6 +40,31 @@ export default function AboutPageClient({ cmsAbout, clients, siteSettings }: Abo
   const heroCardRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  const dynamicStats = useMemo(() => {
+    if (cmsAbout?.credentials) {
+      if (Array.isArray(cmsAbout.credentials)) {
+        return cmsAbout.credentials.map((c, i) => {
+          if (typeof c === 'object' && c !== null && 'value' in c && 'label' in c) {
+            return c as { value: string; label: string };
+          }
+          return { value: String(c), label: `ACCREDITATION #${i + 1}` };
+        });
+      }
+      try {
+        const parsed = JSON.parse(cmsAbout.credentials);
+        if (Array.isArray(parsed)) {
+          return parsed.map((c, i) => {
+            if (typeof c === 'object' && c !== null && 'value' in c && 'label' in c) {
+              return c as { value: string; label: string };
+            }
+            return { value: String(c), label: `ACCREDITATION #${i + 1}` };
+          });
+        }
+      } catch {}
+    }
+    return [];
+  }, [cmsAbout?.credentials]);
 
   const reelVideoUrl = cmsAbout?.backgroundUrl || 'https://vjs.zencdn.net/v/oceans.mp4';
   const parsedVideo = parseVideoUrl(reelVideoUrl);
@@ -308,33 +326,33 @@ export default function AboutPageClient({ cmsAbout, clients, siteSettings }: Abo
           <ClientLogosSection clientList={clients} />
         </div>
 
-        { }
         <section id="stats" className="relative py-32 px-6 md:px-12 bg-[#ffd700] text-[#0a0a0a] overflow-hidden">
-          <div className="max-w-7xl mx-auto flex flex-col">
-            <span className="font-condensed text-xl sm:text-2xl uppercase tracking-wider text-[#0a0a0a] font-extrabold block mb-16">
-              BY THE NUMBERS
-            </span>
+          {dynamicStats.length > 0 && (
+            <div className="max-w-7xl mx-auto flex flex-col mb-16">
+              <span className="font-condensed text-xl sm:text-2xl uppercase tracking-wider text-[#0a0a0a] font-extrabold block mb-16">
+                ACCREDITATIONS & RECOGNITION
+              </span>
 
-            { }
-            <div className="flex flex-col">
-              {statsData.map((stat, idx) => (
-                <div
-                  key={idx}
-                  className="py-10 border-b border-[#0a0a0a]/25 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 group"
-                >
-                  <h3 className="font-serif text-6xl sm:text-8xl md:text-9xl font-light text-[#0a0a0a] tracking-tight group-hover:translate-x-4 transition-transform duration-500">
-                    {stat.value}
-                  </h3>
-                  <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#0a0a0a]/70">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
+              <div className="flex flex-col">
+                {dynamicStats.map((stat, idx) => (
+                  <div
+                    key={idx}
+                    className="py-10 border-b border-[#0a0a0a]/25 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 group"
+                  >
+                    <h3 className="font-serif text-6xl sm:text-8xl md:text-9xl font-light text-[#0a0a0a] tracking-tight group-hover:translate-x-4 transition-transform duration-500">
+                      {stat.value}
+                    </h3>
+                    <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#0a0a0a]/70">
+                      {stat.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          { }
-          <div className="w-full overflow-hidden whitespace-nowrap mt-28 pt-8 border-t border-[#0a0a0a]/20">
+          {/* MARQUEE FOOTER CTA */}
+          <div className="w-full overflow-hidden whitespace-nowrap mt-16 pt-8 border-t border-[#0a0a0a]/20">
             <Link href="/contact" className="block group cursor-pointer" aria-label="Let's talk about a project - Contact Us">
               <div ref={marqueeRef} className="flex whitespace-nowrap will-change-transform">
                 <span className="font-condensed text-[12vw] sm:text-[14vw] font-black uppercase tracking-wider leading-none text-[#0a0a0a] group-hover:text-white transition-colors duration-300 pr-12">
