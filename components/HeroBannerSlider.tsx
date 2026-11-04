@@ -26,51 +26,6 @@ interface HeroBannerSliderProps {
   autoPlayInterval?: number; // in milliseconds, default 5000
 }
 
-const FALLBACK_SLIDES: HeroSlideData[] = [
-  {
-    id: 'default-1',
-    title: 'WE ARE CRE8TIVECOVE',
-    subtitle: 'Lean Mean Storytelling Machine & Bold Digital Studio',
-    tagline: 'CREATIVE DIRECTION & FILMS',
-    mediaUrl: '/images/stock/stock-hero.jpg',
-    mediaType: 'IMAGE',
-    ctaText: 'EXPLORE WORK',
-    ctaUrl: '/work',
-    secondaryCtaText: 'ABOUT US',
-    secondaryCtaUrl: '/about',
-    order: 1,
-    active: true,
-  },
-  {
-    id: 'default-2',
-    title: 'WEIRD ENERGY SINCE Y2K',
-    subtitle: 'We Make People Feel Something Unforgettable Through Digital Craft',
-    tagline: 'STRATEGY • DESIGN • PRODUCTION',
-    mediaUrl: '/images/stock/stock-work.jpg',
-    mediaType: 'IMAGE',
-    ctaText: 'OUR SERVICES',
-    ctaUrl: '/services',
-    secondaryCtaText: 'START A PROJECT',
-    secondaryCtaUrl: '/contact',
-    order: 2,
-    active: true,
-  },
-  {
-    id: 'default-3',
-    title: 'CULTURE BEYOND THE LENS',
-    subtitle: 'Award-Winning Narrative, Soundscapes & High-Voltage Experiences',
-    tagline: 'CINEMATIC STORYTELLING',
-    mediaUrl: '/images/stock/stock-bts.jpg',
-    mediaType: 'IMAGE',
-    ctaText: 'VIEW PORTFOLIO',
-    ctaUrl: '/work',
-    secondaryCtaText: 'CONTACT US',
-    secondaryCtaUrl: '/contact',
-    order: 3,
-    active: true,
-  },
-];
-
 function HeroSlideImage({
   src,
   alt,
@@ -110,14 +65,10 @@ function HeroSlideImage({
 }
 
 export default function HeroBannerSlider({
-  slides: propSlides,
+  slides: propSlides = [],
   autoPlayInterval = 5000,
 }: HeroBannerSliderProps) {
-  const activeSlides = (propSlides && propSlides.length > 0
-    ? propSlides.filter((s) => s.active !== false)
-    : FALLBACK_SLIDES);
-
-  const slides = activeSlides.length > 0 ? activeSlides : FALLBACK_SLIDES;
+  const slides = (propSlides || []).filter((s) => s.active !== false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<number>(1);
@@ -128,12 +79,14 @@ export default function HeroBannerSlider({
 
   // Next Slide handler
   const handleNext = useCallback(() => {
+    if (slides.length === 0) return;
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % slides.length);
   }, [slides.length]);
 
   // Prev Slide handler
   const handlePrev = useCallback(() => {
+    if (slides.length === 0) return;
     setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   }, [slides.length]);
@@ -187,6 +140,10 @@ export default function HeroBannerSlider({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev]);
+
+  if (slides.length === 0) {
+    return null;
+  }
 
   const currentSlide = slides[currentIndex] || slides[0];
 

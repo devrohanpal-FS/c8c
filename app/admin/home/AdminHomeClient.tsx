@@ -20,6 +20,18 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
+interface CultureSlide {
+  id?: string;
+  mediaUrl: string;
+  title: string;
+  subtitle?: string | null;
+  badge?: string | null;
+  buttonText?: string | null;
+  linkUrl?: string | null;
+  order: number;
+  active: boolean;
+}
+
 export default function AdminHomeClient() {
   const { addToast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -40,7 +52,7 @@ export default function AdminHomeClient() {
     cultureTag: "THE CULTURE",
     cultureTitle: "BEHIND THE LENS BEYOND THE STORY",
   });
-  const [collageItems, setCollageItems] = useState<any[]>([]);
+  const [collageItems, setCollageItems] = useState<CultureSlide[]>([]);
 
   const fetchHome = React.useCallback(async () => {
     try {
@@ -69,7 +81,7 @@ export default function AdminHomeClient() {
       if (data.collageItems && Array.isArray(data.collageItems)) {
         setCollageItems(data.collageItems);
       }
-    } catch (err: any) {
+    } catch (_err: unknown) {
       addToast("error", "Failed to load Home Page content");
     } finally {
       setLoading(false);
@@ -97,8 +109,9 @@ export default function AdminHomeClient() {
         throw new Error(errData.error || "Failed to save changes");
       }
       addToast("success", "Home page & Culture Coverflow updated successfully!");
-    } catch (err: any) {
-      addToast("error", err.message || "Save failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      addToast("error", message);
     } finally {
       setSaving(false);
     }
@@ -138,7 +151,7 @@ export default function AdminHomeClient() {
     setCollageItems(copy);
   };
 
-  const handleUpdateSlideField = (index: number, field: string, value: any) => {
+  const handleUpdateSlideField = (index: number, field: keyof CultureSlide, value: string | number | boolean | null) => {
     const copy = [...collageItems];
     copy[index] = { ...copy[index], [field]: value };
     setCollageItems(copy);

@@ -12,17 +12,46 @@ import { useScrollReveal } from '@/lib/hooks/useScrollReveal';
 import { parseVideoUrl } from '@/lib/utils';
 import '../Work.css';
 
-interface WorkDetailClientProps {
-  slug: string;
-  initialWork?: any;
+export interface DbWorkGalleryItem {
+  id?: string;
+  mediaUrl: string;
+  mediaType?: string | null;
+  caption?: string | null;
+  order?: number;
 }
 
-function buildWorkDetail(dbWork: any, slug: string): FeaturedWorkDetail {
+export interface DbWorkEntity {
+  id?: string;
+  title: string;
+  slug: string;
+  client: string;
+  category: string;
+  year?: string | null;
+  description: string;
+  fullDescription?: string | null;
+  heroMedia?: string | null;
+  heroVideoUrl?: string | null;
+  thumbnailUrl?: string | null;
+  projectVideoUrl?: string | null;
+  services?: string | null;
+  strategy?: string | null;
+  artDirection?: string | null;
+  deliverables?: string | null;
+  credits?: string | null;
+  gallery?: DbWorkGalleryItem[];
+}
+
+export interface WorkDetailClientProps {
+  slug: string;
+  initialWork?: DbWorkEntity | null;
+}
+
+function buildWorkDetail(dbWork: DbWorkEntity, slug: string): FeaturedWorkDetail {
   const fallback = getFeaturedWorkDetailBySlug(slug);
   const dbVideos: VideoMediaItem[] = [];
 
   if (dbWork.gallery && Array.isArray(dbWork.gallery) && dbWork.gallery.length > 0) {
-    dbWork.gallery.forEach((g: any, idx: number) => {
+    dbWork.gallery.forEach((g: DbWorkGalleryItem, idx: number) => {
       if (g.mediaUrl && g.mediaUrl.trim() !== '') {
         dbVideos.push({
           id: g.id || `gal-${idx}`,
@@ -49,7 +78,7 @@ function buildWorkDetail(dbWork: any, slug: string): FeaturedWorkDetail {
   }
 
   return {
-    id: dbWork.id,
+    id: dbWork.id || fallback?.id || 'work-detail',
     slug: dbWork.slug,
     title: dbWork.title || fallback?.title || slug.replace(/-/g, ' ').toUpperCase(),
     subtitleTag: fallback?.subtitleTag || `+ ${dbWork.category?.toUpperCase() || 'BRAND & MOTION'} +`,
@@ -67,12 +96,7 @@ function buildWorkDetail(dbWork: any, slug: string): FeaturedWorkDetail {
     quote: fallback?.quote,
     services: dbWork.services ? dbWork.services.split(',').map((s: string) => s.trim()) : (fallback?.services || ['Commercial Direction']),
     credits: dbWork.credits || fallback?.credits || 'Creative Direction & Production: Cre8tiveCove Team',
-    nextProject: fallback?.nextProject || {
-      slug: 'warivo-new-ev-scooter',
-      title: 'WARIVO NEW EV SCOOTER',
-      category: 'Automotive & Product Launch',
-      thumbnailUrl: '/uploads/media_1790317167178_9f8fd034136f906b.webp',
-    },
+    nextProject: fallback?.nextProject || undefined,
   };
 }
 
@@ -143,11 +167,28 @@ export const WorkDetailClient: React.FC<WorkDetailClientProps> = ({ slug, initia
   useScrollReveal();
 
   useEffect(() => {
-    if (initialWork) return; // Already initialized from server data
+    // Reset video playback state and pause any running instances on slug change
+    setIsPlayingInline({});
+    setIsMutedInline({});
+    Object.values(videoRefs.current).forEach((video) => {
+      if (video) {
+        try {
+          video.pause();
+        } catch {
+          // Ignore pause errors on detached elements
+        }
+      }
+    });
+
+    if (initialWork) {
+      setWorkData(buildWorkDetail(initialWork, slug));
+      setLoading(false);
+      return;
+    }
 
     const fallback = getFeaturedWorkDetailBySlug(slug);
 
-    fetch(`/api/work/${slug}`)
+    fetch(`/api/public/work/${slug}`)
       .then((res) => {
         if (!res.ok) throw new Error('Not found in DB');
         return res.json();
@@ -158,7 +199,7 @@ export const WorkDetailClient: React.FC<WorkDetailClientProps> = ({ slug, initia
           const dbVideos: VideoMediaItem[] = [];
 
           if (dbWork.gallery && Array.isArray(dbWork.gallery) && dbWork.gallery.length > 0) {
-            dbWork.gallery.forEach((g: any, idx: number) => {
+            dbWork.gallery.forEach((g: DbWorkGalleryItem, idx: number) => {
               if (g.mediaUrl && g.mediaUrl.trim() !== '') {
                 dbVideos.push({
                   id: g.id || `gal-${idx}`,
@@ -210,12 +251,7 @@ export const WorkDetailClient: React.FC<WorkDetailClientProps> = ({ slug, initia
               ? dbWork.services.split(',').map((s: string) => s.trim())
               : (fallback?.services || ['Creative Concept Development', 'Production & Post-Production', 'Animation & VFX', 'Scriptwriting']),
             credits: dbWork.credits || fallback?.credits,
-            nextProject: fallback?.nextProject || {
-              slug: 'skyla-credit-union',
-              title: 'SKYLA CREDIT UNION',
-              category: 'Brand Strategy & Film',
-              thumbnailUrl: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80'
-            }
+            nextProject: fallback?.nextProject || undefined,
           };
           setWorkData(merged);
         } else if (fallback) {

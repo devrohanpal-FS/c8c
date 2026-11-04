@@ -51,8 +51,9 @@ export default function AdminMediaClient() {
       setItems(data.items || []);
       setTotalPages(data.totalPages || 1);
       setTotalCount(data.total || 0);
-    } catch (err: any) {
-      addToast("error", err.message || "Error fetching media");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error fetching media";
+      addToast("error", message);
     } finally {
       setLoading(false);
     }
@@ -85,8 +86,9 @@ export default function AdminMediaClient() {
 
       addToast("success", "Media uploaded successfully!");
       fetchMedia();
-    } catch (err: any) {
-      addToast("error", err.message || "Upload error");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Upload error";
+      addToast("error", message);
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -101,8 +103,9 @@ export default function AdminMediaClient() {
       addToast("success", "Media asset deleted");
       setConfirmDeleteId(null);
       fetchMedia();
-    } catch (err: any) {
-      addToast("error", err.message || "Failed to delete asset");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to delete asset";
+      addToast("error", message);
     }
   };
 

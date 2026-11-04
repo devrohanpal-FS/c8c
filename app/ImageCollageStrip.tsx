@@ -17,54 +17,6 @@ export interface CultureSlideItem {
   badge?: string;
 }
 
-const defaultSlides: CultureSlideItem[] = [
-  {
-    id: 'cs-1',
-    title: 'RETRO TECH 1',
-    subtitle: 'Y2K Heritage & Hardware Ethos',
-    mediaUrl: '/images/BTS/1.jpg',
-    linkUrl: '/about',
-    buttonText: 'View Story',
-    badge: '01 CULTURE',
-  },
-  {
-    id: 'cs-2',
-    title: 'RETRO TECH 2',
-    subtitle: 'Analog Circuits & Tactile Cinema',
-    mediaUrl: '/images/BTS/2.jpg',
-    linkUrl: '/services',
-    buttonText: 'View Disciplines',
-    badge: '02 CRAFT',
-  },
-  {
-    id: 'cs-3',
-    title: 'CYBER MATRIX',
-    subtitle: '3D Motion & Spatial Realism',
-    mediaUrl: '/images/BTS/3.jpg',
-    linkUrl: '/technology',
-    buttonText: 'Explore Tech',
-    badge: '03 APPLIED',
-  },
-  {
-    id: 'cs-4',
-    title: 'GAMING SETUP',
-    subtitle: 'Unapologetic Creative Energy',
-    mediaUrl: '/images/BTS/4.jpg',
-    linkUrl: '/about',
-    buttonText: 'Read Ethos',
-    badge: '04 MANIFESTO',
-  },
-  {
-    id: 'cs-5',
-    title: 'CINEMATIC VISION',
-    subtitle: 'Commercial Direction & Finishing',
-    mediaUrl: '/images/BTS/5.jpg',
-    linkUrl: '/work',
-    buttonText: 'Selected Works',
-    badge: '05 ARCHIVE',
-  },
-];
-
 function CollageSlideImage({
   src,
   alt,
@@ -98,7 +50,7 @@ function CollageSlideImage({
 }
 
 export interface ImageCollageStripProps {
-  items?: any[];
+  items?: CultureSlideItem[];
   cultureTag?: string;
   cultureTitle?: string;
 }
@@ -128,7 +80,7 @@ export default function ImageCollageStrip({
         badge: item.badge || `0${idx + 1} BTS`,
       }));
     }
-    return defaultSlides;
+    return [];
   }, [items]);
 
   const total = slides.length;
@@ -264,6 +216,10 @@ export default function ImageCollageStrip({
     },
     { scope: containerRef }
   );
+
+  if (slides.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -490,15 +446,17 @@ export default function ImageCollageStrip({
           >
             <X size={24} />
           </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={lightboxUrl}
-            alt="Behind The Scenes Still"
-            className="max-w-[94vw] max-h-[88vh] object-contain rounded-2xl shadow-2xl border border-white/20"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/stock/stock-bts.jpg';
-            }}
-          />
+          <div className="relative max-w-[94vw] max-h-[88vh] w-[90vw] h-[80vh] flex items-center justify-center pointer-events-none">
+            <Image
+              src={lightboxUrl}
+              alt="Behind The Scenes Still"
+              fill
+              sizes="94vw"
+              priority
+              className="object-contain rounded-2xl shadow-2xl border border-white/20 pointer-events-auto"
+              unoptimized={lightboxUrl.startsWith('data:') || lightboxUrl.startsWith('blob:')}
+            />
+          </div>
         </div>
       )}
     </section>

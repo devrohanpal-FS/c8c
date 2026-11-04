@@ -46,10 +46,20 @@ async function handleUpdate(req: Request, id: string) {
     });
 
     return NextResponse.json({ faq: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('PATCH /api/admin/faq/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to update FAQ' },
-      { status: 500 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid input'
+          : 'Failed to update FAQ',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }
@@ -78,10 +88,13 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true, faq: deleted });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('DELETE /api/admin/faq/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to delete FAQ' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to delete FAQ' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }

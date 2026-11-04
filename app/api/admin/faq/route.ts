@@ -20,10 +20,13 @@ export async function GET() {
     });
 
     return NextResponse.json({ faqs });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/faq error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch FAQs' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch FAQs' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -58,10 +61,20 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ faq: created }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/faq error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create FAQ' },
-      { status: 500 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid FAQ input'
+          : 'Failed to create FAQ',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

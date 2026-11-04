@@ -60,8 +60,9 @@ export default function AdminAuditLogsClient() {
       setLogs(data.items || []);
       setTotalPages(data.totalPages || 1);
       setTotalCount(data.total || 0);
-    } catch (err: any) {
-      addToast(err.message || "Error fetching audit logs", "error");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error fetching audit logs";
+      addToast("error", "Error fetching audit logs", message);
     } finally {
       setLoading(false);
     }

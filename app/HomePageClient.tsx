@@ -8,9 +8,12 @@ import PageWrapper from '@/components/PageWrapper';
 import HeroSection from './HeroSection';
 import FeaturedWorkGrid from './FeaturedWorkGrid';
 import MarqueeStrip from './MarqueeStrip';
-import ImageCollageStrip from './ImageCollageStrip';
-import ClientLogosSection from './ClientLogosSection';
+import ImageCollageStrip, { CultureSlideItem } from './ImageCollageStrip';
+import ClientLogosSection, { ClientItem } from './ClientLogosSection';
 import './Home.css';
+import type { SiteSettings } from '@prisma/client';
+import type { HeroSlideData } from '@/components/HeroBannerSlider';
+import type { WorkProject } from '@/components/WorkCard';
 
 export interface ThemeConfig {
   name: string;
@@ -37,13 +40,30 @@ export const THEME_REGISTRY: Record<string, ThemeConfig> = {
   },
 };
 
+export interface HomePageData {
+  heroTitle?: string | null;
+  heroSubtitle?: string | null;
+  heroVideoUrl?: string | null;
+  heroPosterUrl?: string | null;
+  heroCtaText?: string | null;
+  heroCtaUrl?: string | null;
+  marqueeText?: string | null;
+  marqueeActive?: boolean | null;
+  ctaHeading?: string | null;
+  ctaDescription?: string | null;
+  ctaButtonText?: string | null;
+  ctaButtonUrl?: string | null;
+  cultureTag?: string | null;
+  cultureTitle?: string | null;
+}
+
 export interface HomePageClientProps {
-  cmsContent?: any;
-  featuredWorks?: any[];
-  collageItems?: any[];
-  clients?: any[];
-  siteSettings?: any;
-  heroSlides?: any[];
+  cmsContent?: HomePageData | null;
+  featuredWorks?: WorkProject[];
+  collageItems?: CultureSlideItem[];
+  clients?: ClientItem[];
+  siteSettings?: SiteSettings | null;
+  heroSlides?: HeroSlideData[];
 }
 
 export default function HomePageClient({
@@ -59,7 +79,7 @@ export default function HomePageClient({
   useGSAP(
     () => {
       const heroEl = document.getElementById('hero-section');
-      const headingEl = document.getElementById('heading-section') || document.getElementById('heding-section');
+      const headingEl = document.getElementById('heading-section');
       const workEl = document.getElementById('work-section');
 
       if (heroEl && (headingEl || workEl)) {
@@ -125,11 +145,11 @@ export default function HomePageClient({
 
         <div id="work-section" className="relative w-full">
           <FeaturedWorkGrid projects={featuredWorks} />
-          <MarqueeStrip text={cmsContent?.marqueeText} active={cmsContent?.marqueeActive} />
+          <MarqueeStrip text={cmsContent?.marqueeText || undefined} active={cmsContent?.marqueeActive ?? undefined} />
           <ImageCollageStrip
             items={collageItems}
-            cultureTag={cmsContent?.cultureTag}
-            cultureTitle={cmsContent?.cultureTitle}
+            cultureTag={cmsContent?.cultureTag || undefined}
+            cultureTitle={cmsContent?.cultureTitle || undefined}
           />
         </div>
 

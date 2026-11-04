@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { requireAuthUser } from '@/lib/auth';
 import { canManageContent } from '@/lib/permissions';
 import { prisma } from '@/lib/db';
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Prisma.MediaWhereInput = {};
     if (mimeType && mimeType !== 'ALL') {
       where.mimeType = { startsWith: mimeType };
     }
@@ -52,10 +53,13 @@ export async function GET(req: NextRequest) {
       limit,
       totalPages: Math.ceil(total / limit) || 1,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/media error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch media library' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch media library' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -112,11 +116,19 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ media: mediaRecord }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /api/admin/media error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isClientError =
+      errMsg.includes('File size exceeds') ||
+      errMsg.includes('Forbidden file type') ||
+      errMsg.includes('File content does not match') ||
+      errMsg.includes('No file provided');
+
     return NextResponse.json(
-      { error: error.message || 'Media upload failed' },
-      { status: 400 }
+      { error: isAuth ? 'Unauthorized access' : isClientError ? errMsg : 'Media upload failed' },
+      { status: isAuth ? 401 : isClientError ? 400 : 500 }
     );
   }
 }

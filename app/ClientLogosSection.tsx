@@ -12,21 +12,8 @@ export interface ClientItem {
   website?: string | null;
 }
 
-const defaultClients: ClientItem[] = [
-  { name: 'Indian Railways', logo: '/images/clients/indian-railways-logo.png' },
-  { name: 'Hindustan Petroleum', logo: '/images/clients/hp-hindustan-petroleum-logo.png' },
-  { name: 'Axis Max Life Insurance', logo: '/images/clients/axis-max-life-insurance-logo.png' },
-  { name: 'State Bank of India', logo: '/images/clients/sbi-logo.webp' },
-  { name: 'Bharat Petroleum', logo: '/images/clients/bharat-petroleum-logo.png' },
-  { name: 'Bharat Gas', logo: '/images/clients/bharat-gas-logo.webp' },
-  { name: 'WARIVO Motors', logo: '/images/clients/warivo-motors-logo.png' },
-  { name: 'Barco', logo: '/images/clients/barco-logo.png' },
-  { name: 'Bajaj Allianz', logo: '/images/clients/bajaj-allianz-logo.png' },
-  { name: 'NeuroEquilibrium', logo: '/images/clients/neuro-equilibrium-logo.png' },
-];
-
 function ClientLogoItem({ name, logo }: { name: string; logo?: string | null }) {
-  const [imgSrc, setImgSrc] = useState(logo || '/images/stock/stock-logo.png');
+  const [imgSrc, setImgSrc] = useState(logo || '');
   const [hasError, setHasError] = useState(false);
 
   return (
@@ -38,13 +25,7 @@ function ClientLogoItem({ name, logo }: { name: string; logo?: string | null }) 
           width={320}
           height={160}
           unoptimized
-          onError={() => {
-            if (imgSrc !== '/images/stock/stock-logo.png') {
-              setImgSrc('/images/stock/stock-logo.png');
-            } else {
-              setHasError(true);
-            }
-          }}
+          onError={() => setHasError(true)}
           className="max-h-24 sm:max-h-32 md:max-h-[10rem] w-auto max-w-[260px] object-contain p-[7px] shadow-md group-hover:brightness-105 transition-all"
         />
       ) : (
@@ -63,17 +44,15 @@ export interface ClientLogosSectionProps {
   className?: string;
 }
 
-export default function ClientLogosSection({ clientList, className }: ClientLogosSectionProps = {}) {
+export default function ClientLogosSection({ clientList = [], className }: ClientLogosSectionProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const validIncomingClients = (clientList || []).filter((c) => {
+  const activeClients = (clientList || []).filter((c) => {
     if (!c) return false;
     const name = typeof c === 'string' ? c : c.name;
     return Boolean(name && name.trim().length > 0);
   });
-
-  const activeClients = validIncomingClients.length > 0 ? validIncomingClients : defaultClients;
 
   useGSAP(
     () => {

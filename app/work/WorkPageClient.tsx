@@ -9,9 +9,9 @@ import {
   Sparkles,
   Film,
   Flame,
-  Box,
+  Cpu,
   Video,
-  Camera,
+  Briefcase,
 } from 'lucide-react';
 
 import PageWrapper from '@/components/PageWrapper';
@@ -31,207 +31,6 @@ export interface WorkItem {
   featured?: boolean;
 }
 
-const workArchive: WorkItem[] = [
-  {
-    id: '1',
-    number: '01',
-    title: 'TVC- SBI Foreign Card',
-    client: 'State Bank of India (SBI)',
-    category: 'TVC & Commercials',
-    slug: 'tvc-sbi-foreign-card',
-    image: '/uploads/media_1789716925770_1926afe5529db945.webp',
-    video: '/uploads/media_1789641018034_c785dac94a320847.mp4',
-    featured: true,
-  },
-  {
-    id: '2',
-    number: '02',
-    title: 'WARIVO New EV Scooter',
-    client: 'WARIVO Motors',
-    category: 'TVC & Commercials',
-    slug: 'warivo-new-ev-scooter',
-    image: '/uploads/media_1790317167178_9f8fd034136f906b.webp',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: true,
-  },
-  {
-    id: '3',
-    number: '03',
-    title: 'Digital Ad - ECODET',
-    client: 'ECODET',
-    category: 'Brand Campaigns',
-    slug: 'digital-ad-ecodet',
-    image: '/uploads/media_1789712476931_2390ae4a260c6b9f.png',
-    video: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    featured: true,
-  },
-  {
-    id: '4',
-    number: '04',
-    title: 'Drone Flythrough',
-    client: 'Real Estate & Architecture Studio',
-    category: 'Corporate AV & Testimonials',
-    slug: 'drone-flythrough',
-    image: '/uploads/media_1789645040441_8156aa071d1b958d.jpg',
-    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    featured: true,
-  },
-  {
-    id: '5',
-    number: '05',
-    title: 'Neuro Equilibrium Vertigo Clinic',
-    client: 'NeuroEquilibrium Diagnostic Systems',
-    category: 'Corporate AV & Testimonials',
-    slug: 'neuro-equilibrium-vertigo-clinic',
-    image: '/uploads/media_1790317263343_1a8f8ea6fd90b213.webp',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: true,
-  },
-  {
-    id: '6',
-    number: '06',
-    title: 'Barco at GITEX GLOBAL 2025 Dubai',
-    client: 'Barco Visual Solutions',
-    category: 'CGI & AI Commercials',
-    slug: 'barco-at-gitex-global-2025-dubai',
-    image: '/uploads/media_1789640757160_d4e2ed81fbdc0699.png',
-    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    featured: true,
-  },
-  {
-    id: '7',
-    number: '07',
-    title: 'Bajaj Insurance',
-    client: 'Bajaj Allianz',
-    category: 'Brand Campaigns',
-    slug: 'bajaj-insurance',
-    image: '/uploads/media_1790317334958_9020ba24327380de.webp',
-    video: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    featured: true,
-  },
-  {
-    id: '8',
-    number: '08',
-    title: 'Bharat Gas',
-    client: 'Bharat Petroleum (BPCL)',
-    category: 'Brand Campaigns',
-    slug: 'bharat-gas',
-    image: '/uploads/media_1789716642256_dbd919690b02362a.webp',
-    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-    featured: true,
-  },
-  {
-    id: '9',
-    number: '09',
-    title: 'SBI YONO Logo Launch',
-    client: 'SBI YONO',
-    category: 'Brand Campaigns',
-    slug: 'sbi-yono-logo-launch',
-    image: '/uploads/media_1789645370035_7d71477fba6f51e1.png',
-    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    featured: true,
-  },
-  {
-    id: '10',
-    number: '10',
-    title: 'Xtended Space Through',
-    client: 'Xtended Space',
-    category: 'Corporate AV & Testimonials',
-    slug: 'xtended-space-through',
-    image: '/uploads/media_1789645284182_7ee3f75c6acdfd77.png',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: false,
-  },
-  {
-    id: '11',
-    number: '11',
-    title: 'GST Motion Explainer',
-    client: 'Ministry of Finance',
-    category: 'CGI & AI Commercials',
-    slug: 'gst',
-    image: '/uploads/media_1789645418345_61ded377282767a6.png',
-    video: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    featured: false,
-  },
-  {
-    id: '12',
-    number: '12',
-    title: 'The Players Club',
-    client: 'SC Education Lottery',
-    category: 'TVC & Commercials',
-    slug: 'the-players-club',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: true,
-  },
-  {
-    id: '13',
-    number: '13',
-    title: 'Skyla Credit Union',
-    client: 'Skyla Financial',
-    category: 'Brand Campaigns',
-    slug: 'skyla-credit-union',
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: true,
-  },
-  {
-    id: '14',
-    number: '14',
-    title: 'Conversations',
-    client: 'DAODAS',
-    category: 'Brand Campaigns',
-    slug: 'conversations',
-    image: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    featured: true,
-  },
-  {
-    id: '15',
-    number: '15',
-    title: 'Midlands Tech',
-    client: 'Follow Your Inner Maverick',
-    category: 'CGI & AI Commercials',
-    slug: 'midlands-tech',
-    image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    featured: true,
-  },
-  {
-    id: '16',
-    number: '16',
-    title: "Work Doesn't Work",
-    client: 'SC DHEC',
-    category: 'TVC & Commercials',
-    slug: 'work-doesnt-work',
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: true,
-  },
-  {
-    id: '17',
-    number: '17',
-    title: 'Vogue Luxe Fashion Editorial',
-    client: 'Vogue & High Fashion Studio',
-    category: 'Photoshoot',
-    slug: 'vogue-luxe-fashion-editorial',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: true,
-  },
-  {
-    id: '18',
-    number: '18',
-    title: 'Aura Premium Product Line',
-    client: 'Aura Lifestyle & Cosmetics',
-    category: 'Photoshoot',
-    slug: 'aura-premium-product-line',
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=80',
-    video: 'https://vjs.zencdn.net/v/oceans.mp4',
-    featured: false,
-  },
-];
-
 export interface CategoryItem {
   key: string;
   label: string;
@@ -240,11 +39,11 @@ export interface CategoryItem {
 
 export const WORK_CATEGORIES: CategoryItem[] = [
   { key: 'All', label: 'All', icon: Sparkles },
-  { key: 'TVC & Commercials', label: 'TVC & Commercials', icon: Film },
-  { key: 'Brand Campaigns', label: 'Brand Campaigns', icon: Flame },
-  { key: 'CGI & AI Commercials', label: 'CGI & AI Commercials', icon: Box },
-  { key: 'Corporate AV & Testimonials', label: 'Corporate AV & Testimonials', icon: Video },
-  { key: 'Photoshoot', label: 'Photoshoot', icon: Camera },
+  { key: 'TVC and DVC', label: 'TVC and DVC', icon: Film },
+  { key: 'Motivational AVs', label: 'Motivational AVs', icon: Flame },
+  { key: 'Gen AI', label: 'Gen AI', icon: Cpu },
+  { key: 'After Event AVs', label: 'After Event AVs', icon: Video },
+  { key: 'Corporate Films', label: 'Corporate Films', icon: Briefcase },
 ];
 
 /**
@@ -296,43 +95,50 @@ function matchesCategory(work: WorkItem, selectedCategory: string): boolean {
     return true;
   }
 
-  // 2. TVC & Commercials
-  if (selectedCategory === 'TVC & Commercials') {
+  // 2. TVC and DVC
+  if (selectedCategory === 'TVC and DVC') {
     return (
       cat.includes('tvc') ||
+      cat.includes('dvc') ||
       cat.includes('commercial') ||
       cat.includes('film') ||
       cat.includes('automotive') ||
       cat.includes('cinematography') ||
       title.includes('tvc') ||
+      title.includes('dvc') ||
       title.includes('warivo') ||
       title.includes('players') ||
-      title.includes('work doesn')
+      title.includes('work doesn') ||
+      title.includes('sbi foreign')
     );
   }
 
-  // 3. Brand Campaigns
-  if (selectedCategory === 'Brand Campaigns') {
+  // 3. Motivational AVs
+  if (selectedCategory === 'Motivational AVs') {
     return (
+      cat.includes('motivational') ||
+      cat.includes('anthem') ||
+      cat.includes('inspiration') ||
+      cat.includes('manifesto') ||
+      cat.includes('awareness') ||
+      cat.includes('culture') ||
       cat.includes('campaign') ||
       cat.includes('brand') ||
       cat.includes('strategy') ||
-      cat.includes('identity') ||
-      cat.includes('advertising') ||
-      title.includes('bharat') ||
-      title.includes('bajaj') ||
-      title.includes('ecodet') ||
-      title.includes('yono') ||
       title.includes('conversations') ||
-      title.includes('skyla')
+      title.includes('skyla') ||
+      title.includes('bharat') ||
+      title.includes('bajaj')
     );
   }
 
-  // 4. CGI & AI Commercials
-  if (selectedCategory === 'CGI & AI Commercials') {
+  // 4. Gen AI
+  if (selectedCategory === 'Gen AI') {
     return (
-      cat.includes('cgi') ||
+      cat.includes('gen ai') ||
       cat.includes('ai') ||
+      cat.includes('generative') ||
+      cat.includes('cgi') ||
       cat.includes('3d') ||
       cat.includes('vfx') ||
       cat.includes('webgl') ||
@@ -340,42 +146,45 @@ function matchesCategory(work: WorkItem, selectedCategory: string): boolean {
       cat.includes('motion graphics') ||
       cat.includes('explainer') ||
       title.includes('midlands') ||
-      title.includes('gst')
+      title.includes('gst') ||
+      title.includes('yono') ||
+      title.includes('ecodet')
     );
   }
 
-  // 5. Corporate AV & Testimonials
-  if (selectedCategory === 'Corporate AV & Testimonials') {
+  // 5. After Event AVs
+  if (selectedCategory === 'After Event AVs') {
+    return (
+      cat.includes('after event') ||
+      cat.includes('event') ||
+      cat.includes('conference') ||
+      cat.includes('exhibition') ||
+      cat.includes('launch') ||
+      cat.includes('activation') ||
+      title.includes('gitex') ||
+      title.includes('barco') ||
+      title.includes('event')
+    );
+  }
+
+  // 6. Corporate Films
+  if (selectedCategory === 'Corporate Films') {
     return (
       cat.includes('corporate') ||
-      cat.includes('av') ||
-      cat.includes('testimonial') ||
+      cat.includes('walkthrough') ||
+      cat.includes('medical') ||
       cat.includes('healthcare') ||
-      cat.includes('event technology') ||
-      cat.includes('aerial') ||
+      cat.includes('clinic') ||
+      cat.includes('diagnostic') ||
       cat.includes('drone') ||
+      cat.includes('fpv') ||
+      cat.includes('aerial') ||
       cat.includes('virtual tour') ||
       cat.includes('360') ||
+      cat.includes('overview') ||
       title.includes('neuro') ||
       title.includes('drone') ||
-      title.includes('barco') ||
       title.includes('xtended')
-    );
-  }
-
-  // 6. Photoshoot
-  if (selectedCategory === 'Photoshoot') {
-    return (
-      cat.includes('photoshoot') ||
-      cat.includes('photo') ||
-      cat.includes('still') ||
-      cat.includes('print') ||
-      cat.includes('editorial') ||
-      cat.includes('lifestyle') ||
-      title.includes('photoshoot') ||
-      title.includes('photo') ||
-      title.includes('vogue') ||
-      title.includes('aura')
     );
   }
 
@@ -410,7 +219,7 @@ function ShowcaseCard({ work, index }: WorkCardProps) {
         videoRef.current.currentTime = 0;
         const playPromise = videoRef.current.play();
         if (playPromise !== undefined) {
-          playPromise.catch(() => {});
+          playPromise.catch(() => { });
         }
       } else {
         videoRef.current.pause();
@@ -454,9 +263,8 @@ function ShowcaseCard({ work, index }: WorkCardProps) {
               loop
               playsInline
               preload="none"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
-              }`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
             />
           )}
 
@@ -490,8 +298,25 @@ function ShowcaseCard({ work, index }: WorkCardProps) {
   );
 }
 
-interface WorkPageClientProps {
-  initialWorks?: any[];
+export interface WorkSummaryItem {
+  id: string;
+  title: string;
+  slug: string;
+  client: string;
+  category: string;
+  year?: string | null;
+  desc?: string | null;
+  media?: string | null;
+  heroMedia?: string | null;
+  thumbnailUrl?: string | null;
+  videoUrl?: string | null;
+  heroVideoUrl?: string | null;
+  projectVideoUrl?: string | null;
+  featured?: boolean;
+}
+
+export interface WorkPageClientProps {
+  initialWorks?: WorkSummaryItem[];
 }
 
 export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {}) {
@@ -499,15 +324,15 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
 
   const [dbWorks, setDbWorks] = useState<WorkItem[]>(() => {
     if (initialWorks && initialWorks.length > 0) {
-      return initialWorks.map((w: any, idx: number) => ({
+      return initialWorks.map((w: WorkSummaryItem, idx: number) => ({
         id: w.id || String(idx),
         number: String(idx + 1).padStart(2, '0'),
         title: w.title || '',
         client: w.client || 'CRE8TIVECOVE PARTNER',
-        category: w.category || 'TVC & Commercials',
+        category: w.category || 'TVC and DVC',
         slug: w.slug,
         image: w.media || w.thumbnailUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-        video: w.videoUrl || w.projectVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
+        video: w.videoUrl || w.projectVideoUrl || 'https://www.youtube.com/watch?v=hu-mu6556so',
         featured: Boolean(w.featured),
       }));
     }
@@ -519,24 +344,24 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
       .then((res) => res.json())
       .then((data) => {
         if (data.works && Array.isArray(data.works) && data.works.length > 0) {
-          const mapped: WorkItem[] = data.works.map((w: any, idx: number) => ({
+          const mapped: WorkItem[] = data.works.map((w: WorkSummaryItem, idx: number) => ({
             id: w.id,
             number: String(idx + 1).padStart(2, '0'),
             title: w.title || '',
             client: w.client || 'CRE8TIVECOVE PARTNER',
-            category: w.category || 'TVC & Commercials',
+            category: w.category || 'TVC and DVC',
             slug: w.slug,
             image: w.thumbnailUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-            video: w.heroVideoUrl || w.projectVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
+            video: w.heroVideoUrl || w.projectVideoUrl || 'https://www.youtube.com/watch?v=hu-mu6556so',
             featured: Boolean(w.featured),
           }));
           setDbWorks(mapped);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
-  const activeWorks = dbWorks.length > 0 ? dbWorks : workArchive;
+  const activeWorks = dbWorks;
 
   // Calculate live count for each category
   const categoryCounts = useMemo(() => {
@@ -601,11 +426,10 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
                   key={cat.key}
                   type="button"
                   onClick={() => setActiveCategory(cat.key)}
-                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap focus:outline-none ${
-                    isActive
+                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap focus:outline-none ${isActive
                       ? 'text-[#0a0a0a] font-semibold'
                       : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   {isActive && (
                     <motion.div
@@ -617,9 +441,8 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
 
                   {/* Category Icon */}
                   <span
-                    className={`relative z-10 transition-colors ${
-                      isActive ? 'text-[#0a0a0a]' : 'text-neutral-400 group-hover:text-[#ffd700]'
-                    }`}
+                    className={`relative z-10 transition-colors ${isActive ? 'text-[#0a0a0a]' : 'text-neutral-400 group-hover:text-[#ffd700]'
+                      }`}
                   >
                     <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </span>
@@ -629,11 +452,10 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
 
                   {/* Count Badge */}
                   <span
-                    className={`relative z-10 text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full transition-colors ${
-                      isActive
+                    className={`relative z-10 text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full transition-colors ${isActive
                         ? 'bg-[#0a0a0a]/20 text-[#0a0a0a] font-bold'
                         : 'bg-white/10 text-neutral-400 group-hover:text-white'
-                    }`}
+                      }`}
                   >
                     {count}
                   </span>

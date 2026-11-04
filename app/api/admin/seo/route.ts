@@ -3,6 +3,7 @@ import { requireAuthUser } from '@/lib/auth';
 import { canManageContent } from '@/lib/permissions';
 import { prisma } from '@/lib/db';
 import { AuditService } from '@/lib/audit';
+import { seoSchema } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,10 +20,13 @@ export async function GET() {
     });
 
     return NextResponse.json({ seoRecords });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/seo error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch SEO settings' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch SEO settings' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -36,34 +40,30 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
-    const { pageIdentifier, title, description, keywords, ogTitle, ogDescription, ogImage, canonicalUrl, noIndex } = body;
-
-    if (!pageIdentifier) {
-      return NextResponse.json({ error: 'pageIdentifier is required' }, { status: 400 });
-    }
+    const validated = seoSchema.parse(body);
 
     const updated = await prisma.sEO.upsert({
-      where: { pageIdentifier },
+      where: { pageIdentifier: validated.pageIdentifier },
       update: {
-        title,
-        description,
-        keywords,
-        ogTitle,
-        ogDescription,
-        ogImage,
-        canonicalUrl,
-        noIndex: noIndex ?? false,
+        title: validated.title ?? null,
+        description: validated.description ?? null,
+        keywords: validated.keywords ?? null,
+        ogTitle: validated.ogTitle ?? null,
+        ogDescription: validated.ogDescription ?? null,
+        ogImage: validated.ogImage ?? null,
+        canonicalUrl: validated.canonicalUrl ?? null,
+        noIndex: validated.noIndex ?? false,
       },
       create: {
-        pageIdentifier,
-        title,
-        description,
-        keywords,
-        ogTitle,
-        ogDescription,
-        ogImage,
-        canonicalUrl,
-        noIndex: noIndex ?? false,
+        pageIdentifier: validated.pageIdentifier,
+        title: validated.title ?? null,
+        description: validated.description ?? null,
+        keywords: validated.keywords ?? null,
+        ogTitle: validated.ogTitle ?? null,
+        ogDescription: validated.ogDescription ?? null,
+        ogImage: validated.ogImage ?? null,
+        canonicalUrl: validated.canonicalUrl ?? null,
+        noIndex: validated.noIndex ?? false,
       },
     });
 
@@ -72,14 +72,21 @@ export async function PUT(req: Request) {
       action: 'UPDATE_SEO_SETTINGS',
       entity: 'SEO',
       entityId: updated.id,
-      details: { pageIdentifier, title, description },
+      details: { pageIdentifier: validated.pageIdentifier, title: validated.title, description: validated.description },
     });
 
     return NextResponse.json({ seo: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('PUT /api/admin/seo error:', error);
+    const errName = error instanceof Error ? error.name : '';
+    const errMsg = error instanceof Error ? error.message : '';
+    if (errName === 'ZodError') {
+      return NextResponse.json({ error: 'Invalid SEO payload' }, { status: 400 });
+    }
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to update SEO settings' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to update SEO settings' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }

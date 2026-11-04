@@ -54,130 +54,6 @@ function TechCardImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-const defaultTechServices: TechServiceItem[] = [
-  {
-    id: 't1',
-    slug: 'web-development',
-    number: '01',
-    categoryTag: 'Full-Stack Engineering',
-    title: 'Web Development',
-    description: 'Next.js web apps and digital flagships built for speed, SEO dominance, and people with zero patience for slow load times.',
-    tags: ['Next.js 14/15', 'Full-Stack React', 'Headless CMS', 'Sub-Second Speeds'],
-    image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'laptop',
-  },
-  {
-    id: 't2',
-    slug: 'mobile-app-development',
-    number: '02',
-    categoryTag: 'Mobile Architecture',
-    title: 'Mobile App Development',
-    description: 'iOS & Android apps that feel like butter in the hand. Built with React Native & Flutter, zero bloat, and rock-solid offline sync.',
-    tags: ['iOS & Android', 'React Native / Flutter', 'Offline-First Sync', 'App Store Launch'],
-    image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'mobile',
-  },
-  {
-    id: 't3',
-    slug: 'ai-solutions',
-    number: '03',
-    categoryTag: 'Applied Machine Intelligence',
-    title: 'AI Solutions',
-    description: 'Skip the generic wrapper gimmicks. We build custom RAG pipelines and private AI engines trained on your company’s proprietary data.',
-    tags: ['Enterprise RAG', 'Private LLMs', 'Semantic Search', 'Zero Hallucinations'],
-    image: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'brain',
-  },
-  {
-    id: 't4',
-    slug: 'ai-agents',
-    number: '04',
-    categoryTag: 'Autonomous Workflows',
-    title: 'AI Agents',
-    description: 'Autonomous digital teammates that qualify incoming leads, answer customer questions at 3 AM, and update your CRM on autopilot.',
-    tags: ['Sales SDR Agents', '24/7 Support Bots', 'CRM Automation', 'Function Calling'],
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'bot',
-  },
-  {
-    id: 't5',
-    slug: 'whatsapp-solutions',
-    number: '05',
-    categoryTag: 'Conversational Commerce',
-    title: 'WhatsApp Solutions',
-    description: 'Turn WhatsApp into your highest-converting sales channel. Official Meta Cloud APIs, automated cart recovery, and instant AI chat.',
-    tags: ['Meta Cloud API', 'Green Tick Verification', 'Cart Recovery', 'CRM Sync'],
-    image: 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'whatsapp',
-  },
-  {
-    id: 't6',
-    slug: 'automation',
-    number: '06',
-    categoryTag: 'Process Engineering',
-    title: 'Automation',
-    description: 'Stop paying humans to copy-paste between spreadsheets. We automate complex workflows with self-hosted n8n and AI document parsing.',
-    tags: ['Self-Hosted n8n', 'Invoice & PDF OCR', 'Zero Per-Task Fees', 'Zapier Replacement'],
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'cpu',
-  },
-  {
-    id: 't7',
-    slug: 'software-saas-development',
-    number: '07',
-    categoryTag: 'Scalable Systems',
-    title: 'Software & SaaS Development',
-    description: 'Custom SaaS platforms, internal ERPs, and booking engines built from scratch to handle real scale without crashing on launch day.',
-    tags: ['Multi-Tenant SaaS', 'Custom ERP / CRM', 'Stripe Billing', 'PostgreSQL Scale'],
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'layers',
-  },
-  {
-    id: 't8',
-    slug: 'api-integrations',
-    number: '08',
-    categoryTag: 'System Connectivity',
-    title: 'API & Integrations',
-    description: 'We connect your payment gateways, CRMs, logistics, and legacy databases into one synchronized, fail-safe system.',
-    tags: ['Stripe / Razorpay', 'Custom Webhooks', 'REST & GraphQL', 'Fail-Safe Queues'],
-    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'webhook',
-  },
-  {
-    id: 't9',
-    slug: 'digital-experience-virtual-tours',
-    number: '09',
-    categoryTag: 'Spatial Realism',
-    title: 'Digital Experience & Virtual Tours',
-    description: 'Interactive 3D web spaces and digital showrooms your customers can explore right in their browser without downloading an app.',
-    tags: ['3D WebGL Configurator', 'Virtual Showrooms', 'Interactive Hotspots', 'Browser-Based VR'],
-    image: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'compass',
-  },
-  {
-    id: 't10',
-    slug: '360-panorama-virtual-tours',
-    number: '10',
-    categoryTag: 'Ultra-HD Capture',
-    title: '360° Panorama & Virtual Tours',
-    description: 'Crystal-clear 8K HDR virtual walkthroughs for luxury real estate, resorts, and Google Maps that turn lookers into bookers.',
-    tags: ['8K HDR Photography', 'Google Street View', 'Real Estate Tours', 'Resort Showcases'],
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'camera',
-  },
-  {
-    id: 't11',
-    slug: 'maintenance-support',
-    number: '11',
-    categoryTag: 'Mission-Critical SLA',
-    title: 'Maintenance & Support',
-    description: 'Sleep easy knowing senior engineers are monitoring your servers 24/7, patching security flaws, and fixing bugs before users notice.',
-    tags: ['24/7 Health Monitoring', 'Security Patches', 'Guaranteed SLA', 'Speed Tuning'],
-    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80',
-    iconName: 'shield',
-  },
-];
-
 function getCategoryIcon(iconName?: string) {
   const iconProps = { className: 'w-4 h-4 text-black' };
   switch (iconName) {
@@ -208,9 +84,11 @@ function getCategoryIcon(iconName?: string) {
   }
 }
 
-interface TechnologyPageClientProps {
-  initialServices?: any[];
-  siteSettings?: any;
+import type { Service, SiteSettings } from '@prisma/client';
+
+export interface TechnologyPageClientProps {
+  initialServices?: Service[];
+  siteSettings?: SiteSettings | null;
 }
 
 export default function TechnologyPageClient({
@@ -237,32 +115,36 @@ export default function TechnologyPageClient({
       .catch(() => {});
   }, []);
 
-  const activeServices: TechServiceItem[] =
-    dbServices.length > 0
-      ? dbServices.map((s, idx) => {
-          let tagsList: string[] = [];
-          if (s.tags) {
-            tagsList = s.tags.split(/[•,]/).map((t: string) => t.trim()).filter(Boolean);
-          } else {
-            const fallbackItem = defaultTechServices.find((d) => d.slug === s.slug);
-            tagsList = fallbackItem?.tags || ['Custom Architecture', 'High Performance'];
-          }
+  const activeServices: TechServiceItem[] = dbServices.map((s, idx) => {
+    let tagsList: string[] = [];
+    if (s.tags) {
+      tagsList = s.tags.split(/[•,]/).map((t: string) => t.trim()).filter(Boolean);
+    } else {
+      tagsList = ['Custom Architecture', 'High Performance'];
+    }
 
-          const fallback = defaultTechServices.find((d) => d.slug === s.slug);
-
-          return {
-            id: s.id || `tech-${idx}`,
-            slug: s.slug || fallback?.slug || `tech-${idx}`,
-            number: String(idx + 1).padStart(2, '0'),
-            categoryTag: fallback?.categoryTag || 'Digital Architecture',
-            title: s.title || fallback?.title || 'Technology Service',
-            description: s.description || fallback?.description || '',
-            tags: tagsList,
-            image: s.image || fallback?.image || 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
-            iconName: fallback?.iconName || 'laptop',
-          };
-        })
-      : defaultTechServices;
+    return {
+      id: s.id || `tech-${idx}`,
+      slug: s.slug || `tech-${idx}`,
+      number: String(idx + 1).padStart(2, '0'),
+      categoryTag: s.category || 'Digital Architecture',
+      title: s.title || 'Technology Service',
+      description: s.description || '',
+      tags: tagsList,
+      image: s.image || '/images/stock/stock-tech.jpg',
+      iconName: s.slug?.includes('mobile')
+        ? 'mobile'
+        : s.slug?.includes('ai')
+        ? 'brain'
+        : s.slug?.includes('agent')
+        ? 'bot'
+        : s.slug?.includes('whatsapp')
+        ? 'whatsapp'
+        : s.slug?.includes('automation')
+        ? 'cpu'
+        : 'laptop',
+    };
+  });
 
   return (
     <PageWrapper>
@@ -340,7 +222,7 @@ export default function TechnologyPageClient({
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.04 }}
                 >
                   <Link
-                    href={`/services/${srv.slug}`}
+                    href="/contact"
                     className="group relative block bg-white/60 hover:bg-white border border-black/10 hover:border-black/30 rounded-3xl p-6 sm:p-8 lg:p-10 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:-translate-y-1"
                   >
                     <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-8 sm:gap-10">

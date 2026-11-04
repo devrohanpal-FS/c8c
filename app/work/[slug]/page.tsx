@@ -5,10 +5,15 @@ import { prisma } from '@/lib/db';
 
 export const revalidate = 300; // Incremental Static Regeneration (5 minutes)
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+interface WorkSinglePageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: WorkSinglePageProps): Promise<Metadata> {
+  const { slug } = await params;
   try {
     const work = await prisma.work.findFirst({
-      where: { slug: params.slug, status: 'PUBLISHED', deletedAt: null },
+      where: { slug, status: 'PUBLISHED', deletedAt: null },
       include: { seo: true },
     });
 
@@ -34,21 +39,22 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     // Fallback to slug title
   }
 
-  const fallbackTitle = params.slug.replace(/-/g, ' ').toUpperCase();
+  const fallbackTitle = slug.replace(/-/g, ' ').toUpperCase();
   return {
     title: `${fallbackTitle} — Case Study | CRE8TIVECOVE`,
     description: `Detailed case study overview and creative direction breakdown for ${fallbackTitle}.`,
   };
 }
 
-export default async function WorkSinglePage({ params }: { params: { slug: string } }) {
-  let initialWork: any = null;
+export default async function WorkSinglePage({ params }: WorkSinglePageProps) {
+  const { slug } = await params;
+  let initialWork: Awaited<ReturnType<typeof getPublishedWorkBySlug>> = null;
 
   try {
-    initialWork = await getPublishedWorkBySlug(params.slug);
+    initialWork = await getPublishedWorkBySlug(slug);
   } catch {
     // Fallback handled on client
   }
 
-  return <WorkDetailClient slug={params.slug} initialWork={initialWork} />;
+  return <WorkDetailClient key={slug} slug={slug} initialWork={initialWork} />;
 }

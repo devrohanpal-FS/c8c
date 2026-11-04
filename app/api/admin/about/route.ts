@@ -25,9 +25,10 @@ export async function GET() {
     }
 
     return NextResponse.json({ about: aboutData });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /api/admin/about error:', error);
-    const isAuth = error?.message === 'Unauthorized';
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg === 'Unauthorized';
     return NextResponse.json(
       { error: isAuth ? 'Unauthorized' : 'Failed to fetch About Page content' },
       { status: isAuth ? 401 : 500 }
@@ -81,10 +82,12 @@ export async function PUT(req: Request) {
     });
 
     return NextResponse.json({ about: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('PUT /api/admin/about error:', error);
-    const isValidation = error?.name === 'ZodError';
-    const isAuth = error?.message === 'Unauthorized';
+    const errName = error instanceof Error ? error.name : '';
+    const errMsg = error instanceof Error ? error.message : '';
+    const isValidation = errName === 'ZodError';
+    const isAuth = errMsg === 'Unauthorized';
     return NextResponse.json(
       { error: isAuth ? 'Unauthorized' : (isValidation ? 'Invalid about page content' : 'Failed to update About Page content') },
       { status: isAuth ? 401 : (isValidation ? 400 : 500) }

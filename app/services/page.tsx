@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
-import ServicesPageClient from './ServicesPageClient';
+import ServicesPageClient, { ServiceItem, ProcessItem, TestimonialItem, ClientMiniItem } from './ServicesPageClient';
 import { prisma } from '@/lib/db';
+import type { SiteSettings } from '@prisma/client';
 
 export const revalidate = 300; // Incremental Static Regeneration (5 minutes)
 
@@ -27,11 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ServicesPage() {
-  let cmsServices: any[] = [];
-  let processSteps: any[] = [];
-  let testimonials: any[] = [];
-  let clients: any[] = [];
-  let siteSettings: any = null;
+  let cmsServices: ServiceItem[] = [];
+  let processSteps: ProcessItem[] = [];
+  let testimonials: TestimonialItem[] = [];
+  let clients: ClientMiniItem[] = [];
+  let siteSettings: SiteSettings | null = null;
 
   try {
     const [servicesData, steps, testimonialList, clientList, settings] = await Promise.all([
@@ -58,6 +59,7 @@ export default async function ServicesPage() {
       id: s.id,
       title: s.title,
       slug: s.slug,
+      category: s.category || undefined,
       desc: s.description,
       fullDesc: s.fullDescription,
       image: s.image,

@@ -43,7 +43,12 @@ export default function MarqueeStrip({ active = true }: MarqueeStripProps = {}) 
       ref={containerRef}
       className="w-full py-12 sm:py-16 flex flex-col gap-10 justify-center items-center overflow-hidden"
     >
-      <PrimaryButton href="/work" variant="dark">
+      <PrimaryButton
+        href="https://www.youtube.com/@CRE8TIVECOVE/playlists"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="dark"
+      >
         See More Work
       </PrimaryButton>
     </div>

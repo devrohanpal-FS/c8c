@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { requireAuthUser } from '@/lib/auth';
 import { canManageContent } from '@/lib/permissions';
 import { HeroSlideService } from '@/lib/services/heroSlideService';
+import { reorderItemsSchema } from '@/lib/validation';
+import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,16 +16,23 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    if (!Array.isArray(body.items)) {
-      return NextResponse.json({ error: 'Invalid items array' }, { status: 400 });
-    }
+    const validated = reorderItemsSchema.parse(body);
 
-    await HeroSlideService.reorderSlides(body.items);
+    await HeroSlideService.reorderSlides(validated.items);
     return NextResponse.json({ success: true, message: 'Slides reordered' });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/sliders/reorder error:', error);
+    const isAuth = error instanceof Error && error.message.includes('Unauthorized');
+    const isValidation = error instanceof z.ZodError;
     return NextResponse.json(
-      { error: error.message || 'Failed to reorder slides' },
-      { status: 400 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? (error.issues?.[0]?.message || 'Invalid items array structure')
+          : 'Failed to reorder slides',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

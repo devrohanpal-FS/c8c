@@ -36,7 +36,7 @@ export const userCreateSchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name cannot exceed 100 characters'),
   email: z.string().trim().email('Invalid email address').max(120, 'Email cannot exceed 120 characters'),
   password: z.string().min(8, 'Password must be at least 8 characters').max(128, 'Password cannot exceed 128 characters'),
-  role: z.enum(['SUPER_ADMIN', 'ADMIN', 'EDITOR', 'VIEWER']).default('ADMIN'),
+  role: z.enum(['SUPER_ADMIN', 'ADMIN', 'EDITOR', 'VIEWER']).default('VIEWER'),
   avatar: safeUrlOptional,
 });
 
@@ -218,4 +218,25 @@ export const btsSchema = z.object({
   caption: z.string().optional().nullable(),
   order: z.number().int().default(0),
   active: z.boolean().default(true),
+});
+
+export const seoSchema = z.object({
+  pageIdentifier: z.string().trim().min(1, 'pageIdentifier is required').max(100),
+  title: z.string().trim().max(160, 'Title cannot exceed 160 characters').optional().nullable(),
+  description: z.string().trim().max(500, 'Description cannot exceed 500 characters').optional().nullable(),
+  keywords: z.string().trim().max(500, 'Keywords cannot exceed 500 characters').optional().nullable(),
+  ogTitle: z.string().trim().max(160, 'OG Title cannot exceed 160 characters').optional().nullable(),
+  ogDescription: z.string().trim().max(500, 'OG Description cannot exceed 500 characters').optional().nullable(),
+  ogImage: safeUrlOptional,
+  canonicalUrl: safeUrlOptional,
+  noIndex: z.boolean().default(false),
+});
+
+export const reorderItemsSchema = z.object({
+  items: z.array(
+    z.object({
+      id: z.string().min(1, 'Item ID is required'),
+      order: z.number().int('Order must be an integer'),
+    })
+  ).min(1, 'At least one item is required to reorder'),
 });

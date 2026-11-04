@@ -18,9 +18,11 @@ export async function GET() {
     const works = await WorkService.getAllWorks({ publishedOnly: false });
     return NextResponse.json({ works });
   } catch (error) {
+    console.error('GET /api/admin/works error:', error);
+    const isAuth = error instanceof Error && error.message.includes('Unauthorized');
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to fetch works.' },
-      { status: 401 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch works.' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -45,10 +47,14 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, work: newWork }, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/works error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Work creation failed.' },
-      { status: 400 }
+      { error: isAuth ? 'Unauthorized access' : isValidation ? 'Invalid work project payload.' : 'Work creation failed.' },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

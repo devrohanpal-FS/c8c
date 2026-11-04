@@ -2,17 +2,18 @@ import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
 import { getServiceDetailBySlug } from '@/lib/data/serviceDetails';
 import ServiceDetailClient from './ServiceDetailClient';
+import type { Service } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
 interface ServicePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   const fallback = getServiceDetailBySlug(slug);
 
   try {
@@ -46,15 +47,16 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 }
 
 export default async function ServiceSinglePage({ params }: ServicePageProps) {
-  let initialDbService: any = null;
+  const { slug } = await params;
+  let initialDbService: Service | null = null;
 
   try {
     initialDbService = await prisma.service.findFirst({
-      where: { slug: params.slug, deletedAt: null },
+      where: { slug, deletedAt: null },
     });
   } catch (err) {
     console.warn('[SERVICE DETAIL]: DB fetch fallback triggered');
   }
 
-  return <ServiceDetailClient slug={params.slug} initialDbService={initialDbService} />;
+  return <ServiceDetailClient key={slug} slug={slug} initialDbService={initialDbService} />;
 }

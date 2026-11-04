@@ -10,6 +10,8 @@ interface PrimaryButtonProps {
   children: React.ReactNode;
   className?: string;
   variant?: 'dark' | 'light' | 'lime' | 'orange';
+  target?: string;
+  rel?: string;
 }
 
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
@@ -18,6 +20,8 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   children,
   className,
   variant = 'dark',
+  target,
+  rel,
 }) => {
   const variantStyles = {
     dark: 'bg-[#0a0a0a] text-[#FFFEF2] hover:bg-[#1a1a1a]',
@@ -72,7 +76,11 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   );
 
   if (href) {
-    return <Link href={href}>{content}</Link>;
+    return (
+      <Link href={href} target={target} rel={rel}>
+        {content}
+      </Link>
+    );
   }
 
   return (

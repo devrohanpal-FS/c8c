@@ -16,10 +16,13 @@ export async function GET() {
 
     const btsImages = await BtsService.getAllBts(false);
     return NextResponse.json({ btsImages });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/bts error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch BTS images' },
-      { status: 401 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch BTS images' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -58,10 +61,20 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, btsImage: newBts }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/bts error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create BTS image' },
-      { status: 400 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid input'
+          : 'Failed to create BTS image',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

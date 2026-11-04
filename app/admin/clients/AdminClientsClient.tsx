@@ -148,8 +148,9 @@ export default function AdminClientsClient() {
       addToast('success', 'Saved Successfully', `Client partner ${editingItem ? 'updated' : 'created'} successfully!`);
       setModalOpen(false);
       fetchClients();
-    } catch (err: any) {
-      addToast('error', 'Operation Failed', err.message || 'Operation failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Operation failed';
+      addToast('error', 'Operation Failed', message);
     } finally {
       setSubmitting(false);
     }
@@ -163,8 +164,9 @@ export default function AdminClientsClient() {
       addToast('success', 'Client Removed', 'Client partner removed from CMS.');
       setConfirmDeleteId(null);
       fetchClients();
-    } catch (err: any) {
-      addToast('error', 'Delete Failed', err.message || 'Failed to delete client');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete client';
+      addToast('error', 'Delete Failed', message);
     }
   };
 
@@ -178,8 +180,9 @@ export default function AdminClientsClient() {
       if (!res.ok) throw new Error('Failed to update status');
       addToast('success', 'Updated', `${item.name} featured state toggled.`);
       fetchClients();
-    } catch (err: any) {
-      addToast('error', 'Error', err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Update failed';
+      addToast('error', 'Error', message);
     }
   };
 
@@ -193,8 +196,9 @@ export default function AdminClientsClient() {
       if (!res.ok) throw new Error('Failed to update status');
       addToast('success', 'Updated', `${item.name} active status toggled.`);
       fetchClients();
-    } catch (err: any) {
-      addToast('error', 'Error', err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Update failed';
+      addToast('error', 'Error', message);
     }
   };
 

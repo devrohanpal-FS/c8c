@@ -20,10 +20,13 @@ export async function GET() {
     });
 
     return NextResponse.json({ tiers });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/pricing error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch pricing tiers' },
-      { status: 500 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch pricing tiers' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -66,10 +69,20 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ tier: created }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/pricing error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create pricing tier' },
-      { status: 500 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid pricing tier input'
+          : 'Failed to create pricing tier',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

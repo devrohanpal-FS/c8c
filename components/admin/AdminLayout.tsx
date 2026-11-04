@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
@@ -14,10 +15,17 @@ export interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle }) => {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (status === 'loading') {
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/admin/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading' || status === 'unauthenticated') {
     return (
       <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
         <LoadingState label="Authenticating Session..." />

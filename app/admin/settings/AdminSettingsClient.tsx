@@ -20,7 +20,7 @@ export default function AdminSettingsClient() {
     linkedin: "https://www.linkedin.com/company/cre8tivecove/",
     instagram: "https://www.instagram.com/cre8tivecove.cc/",
     youtube: "https://www.youtube.com/@CRE8TIVECOVE",
-    footerContent: "© 2026 CRE8TIVECOVE. All rights reserved. Weird Energy Since Y2K.",
+    footerContent: "© 2026 CRE8TIVECOVE. All rights reserved.",
     defaultCtaHeading: "READY TO START?",
     defaultCtaText: "Let's make something iconic together.",
     defaultCtaUrl: "/contact",
@@ -53,7 +53,7 @@ export default function AdminSettingsClient() {
           defaultSeoDesc: data.settings.defaultSeoDesc || "",
         });
       }
-    } catch (err: any) {
+    } catch (_err: unknown) {
       addToast("error", "Failed to load Site Settings");
     } finally {
       setLoading(false);
@@ -76,8 +76,9 @@ export default function AdminSettingsClient() {
       });
       if (!res.ok) throw new Error("Failed to save site settings");
       addToast("success", "Global Site Settings updated successfully!");
-    } catch (err: any) {
-      addToast("error", err.message || "Save failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      addToast("error", message);
     } finally {
       setSaving(false);
     }

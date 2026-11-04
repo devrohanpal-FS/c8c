@@ -17,9 +17,11 @@ export async function GET() {
     const clients = await ClientService.getAllClients(false);
     return NextResponse.json({ clients });
   } catch (error) {
+    console.error('GET /api/admin/clients error:', error);
+    const isAuth = error instanceof Error && error.message.includes('Unauthorized');
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to fetch clients.' },
-      { status: 401 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch clients.' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -44,10 +46,14 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ client: newClient }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/clients error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create client' },
-      { status: 400 }
+      { error: isAuth ? 'Unauthorized access' : isValidation ? 'Invalid client input' : 'Failed to create client' },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

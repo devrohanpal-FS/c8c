@@ -14,7 +14,7 @@ interface NavItem {
   label: string;
   href: string;
   subtitle: string;
-  image: string;
+  image?: string;
 }
 
 const navItems: NavItem[] = [
@@ -24,7 +24,7 @@ const navItems: NavItem[] = [
     label: 'HOME',
     href: '/',
     subtitle: 'Main Creative Agency Hub',
-    image: '/uploads/media_1793099349899_5f4c8c00b55fe46c.webp',
+    image: '/images/menu/01-home.png',
   },
   {
     id: 'work',
@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     label: 'WORK',
     href: '/work',
     subtitle: 'Archive of Commercial Films & Digital Crafts',
-    image: '/uploads/media_1789716925770_1926afe5529db945.webp',
+    image: '/images/menu/02-work.png',
   },
   {
     id: 'about',
@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
     label: 'ABOUT',
     href: '/about',
     subtitle: 'Manifesto, Culture & Creative Ethos',
-    image: '/uploads/media_1793102157860_c5dc0194593ee8f6.png',
+    image: '/images/menu/03-about.png',
   },
   {
     id: 'services',
@@ -48,7 +48,7 @@ const navItems: NavItem[] = [
     label: 'SERVICES',
     href: '/services',
     subtitle: 'Direction, 3D WebGL & Motion Art',
-    image: '/uploads/media_1793103862506_0e02f2bf93f7ee2a.jpg',
+    image: '/images/menu/04-services.png',
   },
   {
     id: 'technology',
@@ -56,7 +56,7 @@ const navItems: NavItem[] = [
     label: 'TECHNOLOGY',
     href: '/technology',
     subtitle: 'Web, Mobile, AI Agents & Virtual Tours',
-    image: '/uploads/media_1789645284182_7ee3f75c6acdfd77.png',
+    image: '/images/menu/05-technology.png',
   },
   {
     id: 'contact',
@@ -64,7 +64,7 @@ const navItems: NavItem[] = [
     label: 'CONTACT',
     href: '/contact',
     subtitle: 'Start a Project & General Inquiries',
-    image: '/uploads/media_1793098928568_299c025bf8c66802.png',
+    image: '/images/menu/06-contact.png',
   },
 ];
 
@@ -92,7 +92,7 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
       .then((data) => {
         if (data.settings) setSettings(data.settings);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const studioAddress = settings?.address || 'Delhi, India';
@@ -300,16 +300,15 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
       ref={overlayRef}
       data-lenis-prevent
       tabIndex={-1}
-      className={`mobile-menu-overlay fixed inset-0 z-[140] pointer-events-auto font-sans selection:bg-[#ffd700] selection:text-[#0a0a0a] ${
-        isOpen ? 'visible' : 'pointer-events-none'
-      }`}
+      className={`mobile-menu-overlay fixed inset-0 z-[140] pointer-events-auto font-sans selection:bg-[#ffd700] selection:text-[#0a0a0a] ${isOpen ? 'visible' : 'pointer-events-none'
+        }`}
     >
-      {}
+      { }
       <div
         ref={bgRef}
         className="absolute inset-0 bg-[#0a0a0a] text-[#f5f0e6] w-full h-full flex flex-col justify-between p-6 md:p-14 overflow-hidden border-b border-white/10 shadow-2xl"
       >
-        {}
+        { }
         <div
           ref={bgTextRef}
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0"
@@ -319,12 +318,12 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
           </span>
         </div>
 
-        {}
+        { }
         <div className="h-16 shrink-0 relative z-10" />
 
-        {}
+        { }
         <div className="relative z-10 w-full max-w-[1700px] mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-8">
-          {}
+          { }
           <nav className="lg:col-span-7 flex flex-col gap-4 sm:gap-6 text-left" aria-label="Main Navigation">
             {navItems.map((item, idx) => {
               const isActive = activeItem.id === item.id;
@@ -341,36 +340,34 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
                   }}
                   className="group inline-flex items-baseline gap-4 sm:gap-6 focus:outline-none"
                 >
-                  {}
+                  { }
                   <span className="text-xs sm:text-sm font-mono text-[#ffd700] uppercase tracking-widest font-bold shrink-0">
                     [{item.number}]
                   </span>
 
-                  {}
+                  { }
                   <h3
-                    className={`font-condensed text-5xl sm:text-7xl md:text-8xl lg:text-[6.5rem] font-black uppercase leading-[0.88] tracking-tight transition-all duration-300 ${
-                      isActive
+                    className={`font-condensed text-5xl sm:text-7xl md:text-8xl lg:text-[6.5rem] font-black uppercase leading-[0.88] tracking-tight transition-all duration-300 ${isActive
                         ? 'text-[#ffd700] translate-x-3'
                         : 'text-[#f5f0e6]/70 hover:text-white group-hover:translate-x-2'
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </h3>
 
-                  {}
+                  { }
                   <ArrowUpRight
-                    className={`w-6 h-6 sm:w-8 sm:h-8 text-[#ffd700] transition-all duration-300 ${
-                      isActive ? 'opacity-100 rotate-45 scale-110' : 'opacity-0 -rotate-45'
-                    }`}
+                    className={`w-6 h-6 sm:w-8 sm:h-8 text-[#ffd700] transition-all duration-300 ${isActive ? 'opacity-100 rotate-45 scale-110' : 'opacity-0 -rotate-45'
+                      }`}
                   />
                 </Link>
               );
             })}
           </nav>
 
-          {}
+          { }
           <div className="lg:col-span-5 flex flex-col gap-8">
-            {}
+            { }
             <div
               ref={previewImgRef}
               className="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[4/3] rounded-3xl overflow-hidden bg-black border border-white/20 shadow-2xl transition-all duration-500 hidden sm:block"
@@ -380,20 +377,28 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
                 return (
                   <div
                     key={item.id}
-                    className={`absolute inset-0 transition-all duration-500 ease-out ${
-                      isCurrent
+                    className={`absolute inset-0 transition-all duration-500 ease-out ${isCurrent
                         ? 'opacity-100 scale-100 z-10'
                         : 'opacity-0 scale-105 pointer-events-none z-0'
-                    }`}
+                      }`}
                   >
-                    <Image
-                      src={item.image}
-                      alt={item.label}
-                      fill
-                      sizes="(max-width: 1200px) 100vw, 45vw"
-                      className="object-cover"
-                      priority={item.id === 'home'}
-                    />
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.label}
+                        fill
+                        sizes="(max-width: 1200px) 100vw, 45vw"
+                        className="object-cover"
+                        priority={item.id === 'home'}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#181818] via-[#0d0d0d] to-[#050505] flex items-center justify-center p-8 text-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,215,0,0.08)_0%,transparent_75%)]" />
+                        <span className="font-condensed text-5xl lg:text-7xl font-black text-white/10 uppercase tracking-widest select-none">
+                          {item.label}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -408,7 +413,7 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
               </div>
             </div>
 
-            {}
+            { }
             <div ref={infoRef} className="grid grid-cols-2 gap-6 text-left pt-4 border-t border-white/10">
               <div>
                 <span className="text-xs font-mono text-[#ffd700] uppercase tracking-widest block mb-2 font-bold">
@@ -437,7 +442,7 @@ export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlay
           </div>
         </div>
 
-        {}
+        { }
         <div className="relative z-10 w-full overflow-hidden border-t border-white/10 pt-4 pb-2 shrink-0">
           <div className="flex whitespace-nowrap animate-marquee text-xs font-mono text-gray-400 uppercase tracking-widest">
             <span>C8C (CRE8TIVECOVE) • LEAN MEAN STORYTELLING MACHINE • WEIRD ENERGY SINCE Y2K •&nbsp;</span>

@@ -82,8 +82,9 @@ export default function AdminTestimonialsClient() {
       setIsModalOpen(false);
       setEditingItem(null);
       fetchTestimonials();
-    } catch (err: any) {
-      addToast('error', err.message || 'Save failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Save failed';
+      addToast('error', message);
     } finally {
       setSaving(false);
     }

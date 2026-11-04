@@ -2,8 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGSAP } from '@gsap/react';
-import { gsap, ScrollTrigger } from '@/lib/gsap';
+import { ScrollTrigger } from '@/lib/gsap';
 import { cn } from '@/lib/utils';
 
 export interface PageWrapperProps {
@@ -26,18 +25,6 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({
 
     return () => clearTimeout(timer);
   }, []);
-
-  useGSAP(
-    () => {
-
-      gsap.to(containerRef.current, {
-        opacity: 1,
-        duration: 0.4,
-        ease: 'power2.out',
-      });
-    },
-    { scope: containerRef }
-  );
 
   return (
     <AnimatePresence mode="wait">

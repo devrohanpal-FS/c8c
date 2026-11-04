@@ -27,10 +27,20 @@ export async function PATCH(
     const updated = await TestimonialService.updateTestimonial((await params).id, body);
 
     return NextResponse.json({ success: true, testimonial: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('PATCH /api/admin/testimonials/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to update testimonial' },
-      { status: 400 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid input'
+          : 'Failed to update testimonial',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }
@@ -49,10 +59,13 @@ export async function DELETE(
     await TestimonialService.deleteTestimonial((await params).id);
 
     return NextResponse.json({ success: true, message: 'Testimonial deleted' });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('DELETE /api/admin/testimonials/[id] error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to delete testimonial' },
-      { status: 400 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to delete testimonial' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }

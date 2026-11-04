@@ -15,10 +15,13 @@ export async function GET() {
 
     const testimonials = await TestimonialService.getAllTestimonials(false);
     return NextResponse.json({ testimonials });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('GET /api/admin/testimonials error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch testimonials' },
-      { status: 401 }
+      { error: isAuth ? 'Unauthorized access' : 'Failed to fetch testimonials' },
+      { status: isAuth ? 401 : 500 }
     );
   }
 }
@@ -35,10 +38,20 @@ export async function POST(req: Request) {
     const newTestimonial = await TestimonialService.createTestimonial(body);
 
     return NextResponse.json({ success: true, testimonial: newTestimonial }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error('POST /api/admin/testimonials error:', error);
+    const errMsg = error instanceof Error ? error.message : '';
+    const isAuth = errMsg.includes('Unauthorized');
+    const isValidation = error instanceof Error && error.name === 'ZodError';
     return NextResponse.json(
-      { error: error.message || 'Failed to create testimonial' },
-      { status: 400 }
+      {
+        error: isAuth
+          ? 'Unauthorized access'
+          : isValidation
+          ? 'Invalid testimonial input'
+          : 'Failed to create testimonial',
+      },
+      { status: isAuth ? 401 : isValidation ? 400 : 500 }
     );
   }
 }

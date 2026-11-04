@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Anton, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
-import SessionProviderWrapper from '@/components/SessionProviderWrapper';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -26,7 +25,7 @@ const fontSans = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'C8C (Cre8tiveCove) — Creative Agency Platform',
   description:
-    'Award-winning creative agency platform engineered with Next.js 14, GSAP, Lenis, and Tailwind CSS.',
+    'Award-winning creative agency platform engineered with Next.js 16, GSAP, Lenis, and Tailwind CSS.',
 };
 
 export default function RootLayout({
@@ -49,13 +48,11 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#0a0a0a] text-[#f5f0e6] font-sans antialiased selection:bg-[#ffd700] selection:text-[#0a0a0a]">
-        <SessionProviderWrapper>
-          <SmoothScrollProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </SmoothScrollProvider>
-        </SessionProviderWrapper>
+        <SmoothScrollProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </SmoothScrollProvider>
       </body>
     </html>
   );

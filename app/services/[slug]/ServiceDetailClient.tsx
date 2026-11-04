@@ -63,9 +63,11 @@ function SafeServiceImage({
   );
 }
 
-interface ServiceDetailClientProps {
+import type { Service } from '@prisma/client';
+
+export interface ServiceDetailClientProps {
   slug: string;
-  initialDbService?: any;
+  initialDbService?: Service | null;
 }
 
 export default function ServiceDetailClient({
@@ -99,7 +101,33 @@ export default function ServiceDetailClient({
   useScrollReveal();
 
   useEffect(() => {
+    // Reset video playback state on slug change
+    setIsPlaying(false);
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause();
+      } catch {
+        // Ignore errors on unmounting elements
+      }
+    }
+
     const fallback = getServiceDetailBySlug(slug);
+
+    if (initialDbService && fallback) {
+      setService({
+        ...fallback,
+        title: initialDbService.title || fallback.title,
+        overview: initialDbService.description || fallback.overview,
+        tagline: initialDbService.description || fallback.tagline,
+        heroVideo: initialDbService.hoverVideo || fallback.heroVideo,
+        heroImage: initialDbService.image || fallback.heroImage,
+        fullOverviewParagraphs: initialDbService.fullDescription
+          ? [initialDbService.fullDescription, ...fallback.fullOverviewParagraphs.slice(1)]
+          : fallback.fullOverviewParagraphs,
+      });
+      setLoading(false);
+      return;
+    }
 
     fetch(`/api/public/services/${slug}`)
       .then((res) => {
@@ -128,7 +156,7 @@ export default function ServiceDetailClient({
         if (fallback) setService(fallback);
       })
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, [slug, initialDbService]);
 
   const togglePlay = () => {
     if (!videoRef.current) return;

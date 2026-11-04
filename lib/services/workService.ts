@@ -3,6 +3,11 @@ import { z } from 'zod';
 import { workSchema } from '@/lib/validation';
 
 export type WorkInput = z.infer<typeof workSchema>;
+export interface WorkGalleryInputItem {
+  mediaUrl: string;
+  mediaType?: string;
+  caption?: string;
+}
 
 export class WorkService {
   static async getAllWorks(options?: { publishedOnly?: boolean; featuredOnly?: boolean }) {
@@ -40,33 +45,35 @@ export class WorkService {
     if (existing) {
       if (existing.deletedAt !== null) {
         const { video, gallery, ...validData } = validated as any;
-        if (Array.isArray(gallery)) {
-          await prisma.workGallery.deleteMany({ where: { workId: existing.id } });
-        }
-        return await prisma.work.update({
-          where: { id: existing.id },
-          data: {
-            ...validData,
-            deletedAt: null,
-            updatedById: userId,
-            updatedAt: new Date(),
-            ...(gallery && Array.isArray(gallery) && gallery.length > 0
-              ? {
-                  gallery: {
-                    create: gallery.map((item: any, idx: number) => ({
-                      mediaUrl: item.mediaUrl,
-                      mediaType: item.mediaType || 'VIDEO',
-                      caption: item.caption || '',
-                      order: idx,
-                    })),
-                  },
-                }
-              : {}),
-          },
-          include: {
-            gallery: { orderBy: { order: 'asc' } },
-            seo: true,
-          },
+        return await prisma.$transaction(async (tx) => {
+          if (Array.isArray(gallery)) {
+            await tx.workGallery.deleteMany({ where: { workId: existing.id } });
+          }
+          return await tx.work.update({
+            where: { id: existing.id },
+            data: {
+              ...validData,
+              deletedAt: null,
+              updatedById: userId,
+              updatedAt: new Date(),
+              ...(gallery && Array.isArray(gallery) && gallery.length > 0
+                ? {
+                    gallery: {
+                      create: gallery.map((item: WorkGalleryInputItem, idx: number) => ({
+                        mediaUrl: item.mediaUrl,
+                        mediaType: item.mediaType || 'VIDEO',
+                        caption: item.caption || '',
+                        order: idx,
+                      })),
+                    },
+                  }
+                : {}),
+            },
+            include: {
+              gallery: { orderBy: { order: 'asc' } },
+              seo: true,
+            },
+          });
         });
       } else {
         let counter = 1;
@@ -88,7 +95,7 @@ export class WorkService {
         ...(gallery && Array.isArray(gallery) && gallery.length > 0
           ? {
               gallery: {
-                create: gallery.map((item: any, idx: number) => ({
+                create: gallery.map((item: WorkGalleryInputItem, idx: number) => ({
                   mediaUrl: item.mediaUrl,
                   mediaType: item.mediaType || 'VIDEO',
                   caption: item.caption || '',
@@ -132,32 +139,34 @@ export class WorkService {
 
     const { video, gallery, ...validData } = validated as any;
 
-    if (Array.isArray(gallery)) {
-      await prisma.workGallery.deleteMany({ where: { workId: id } });
-    }
+    return await prisma.$transaction(async (tx) => {
+      if (Array.isArray(gallery)) {
+        await tx.workGallery.deleteMany({ where: { workId: id } });
+      }
 
-    return await prisma.work.update({
-      where: { id },
-      data: {
-        ...validData,
-        updatedById: userId,
-        ...(Array.isArray(gallery) && gallery.length > 0
-          ? {
-              gallery: {
-                create: gallery.map((item: any, idx: number) => ({
-                  mediaUrl: item.mediaUrl,
-                  mediaType: item.mediaType || 'VIDEO',
-                  caption: item.caption || '',
-                  order: idx,
-                })),
-              },
-            }
-          : {}),
-      },
-      include: {
-        gallery: { orderBy: { order: 'asc' } },
-        seo: true,
-      },
+      return await tx.work.update({
+        where: { id },
+        data: {
+          ...validData,
+          updatedById: userId,
+          ...(Array.isArray(gallery) && gallery.length > 0
+            ? {
+                gallery: {
+                  create: gallery.map((item: WorkGalleryInputItem, idx: number) => ({
+                    mediaUrl: item.mediaUrl,
+                    mediaType: item.mediaType || 'VIDEO',
+                    caption: item.caption || '',
+                    order: idx,
+                  })),
+                },
+              }
+            : {}),
+        },
+        include: {
+          gallery: { orderBy: { order: 'asc' } },
+          seo: true,
+        },
+      });
     });
   }
 

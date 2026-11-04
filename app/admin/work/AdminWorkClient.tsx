@@ -29,6 +29,9 @@ interface Work {
   description: string;
   heroMedia?: string | null;
   video?: string | null;
+  heroVideoUrl?: string | null;
+  thumbnailUrl?: string | null;
+  projectVideoUrl?: string | null;
   gallery?: WorkGalleryItem[];
   featured: boolean;
   status: string;
@@ -305,21 +308,21 @@ export default function AdminWorkClient({ autoOpenNew, editId }: AdminWorkClient
           </button>
           <button
             onClick={() => {
-              const existingGallery = (w as any).gallery && (w as any).gallery.length > 0
-                ? (w as any).gallery.map((g: any) => ({
+              const existingGallery = w.gallery && w.gallery.length > 0
+                ? w.gallery.map((g: WorkGalleryItem) => ({
                     id: g.id,
                     mediaUrl: g.mediaUrl,
                     mediaType: g.mediaType || 'VIDEO',
                     caption: g.caption || '',
                   }))
-                : (w as any).heroVideoUrl || w.video
-                ? [{ mediaUrl: (w as any).heroVideoUrl || w.video, mediaType: 'VIDEO', caption: 'Main Broadcast Film Cut' }]
+                : w.heroVideoUrl || w.video
+                ? [{ mediaUrl: w.heroVideoUrl || w.video || '', mediaType: 'VIDEO', caption: 'Main Broadcast Film Cut' }]
                 : [];
 
               setEditingWork({
                 ...w,
-                heroMedia: w.heroMedia || (w as any).thumbnailUrl,
-                video: (w as any).heroVideoUrl || (w as any).projectVideoUrl || w.video,
+                heroMedia: w.heroMedia || w.thumbnailUrl,
+                video: w.heroVideoUrl || w.projectVideoUrl || w.video,
                 gallery: existingGallery,
               });
               setIsModalOpen(true);
@@ -440,11 +443,19 @@ export default function AdminWorkClient({ autoOpenNew, editId }: AdminWorkClient
                   <FormField label="CATEGORY">
                     <input
                       type="text"
+                      list="work-categories-list"
                       value={editingWork.category || ''}
                       onChange={(e) => setEditingWork({ ...editingWork, category: e.target.value })}
-                      placeholder="e.g. Commercial Direction"
+                      placeholder="e.g. TVC and DVC"
                       className="w-full bg-[#181818] text-white px-4 py-3 rounded-2xl font-sans text-xs outline-none border border-white/15 focus:border-[#ffd700]"
                     />
+                    <datalist id="work-categories-list">
+                      <option value="TVC and DVC" />
+                      <option value="Motivational AVs" />
+                      <option value="Gen AI" />
+                      <option value="After Event AVs" />
+                      <option value="Corporate Films" />
+                    </datalist>
                   </FormField>
                 </div>
 

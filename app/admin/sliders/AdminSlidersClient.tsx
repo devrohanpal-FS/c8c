@@ -144,8 +144,9 @@ export default function AdminSlidersClient() {
       addToast('success', isEdit ? 'Slide updated successfully!' : 'New slide created successfully!');
       handleCloseModal();
       fetchSlides();
-    } catch (err: any) {
-      addToast('error', err.message || 'Save failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Save failed';
+      addToast('error', message);
     } finally {
       setSaving(false);
     }
@@ -160,8 +161,9 @@ export default function AdminSlidersClient() {
 
       addToast('success', 'Slide deleted');
       fetchSlides();
-    } catch (err: any) {
-      addToast('error', err.message || 'Delete failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Delete failed';
+      addToast('error', message);
     }
   };
 

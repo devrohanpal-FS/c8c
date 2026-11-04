@@ -34,54 +34,43 @@ export default function Navbar({ darkTheme = true }: NavbarProps) {
       const sampleY = headerRect.bottom + 20;
       const sampleX = window.innerWidth / 2;
 
-      let targetEl = document.elementFromPoint(sampleX, sampleY) as HTMLElement | null;
+      const targetEl = document.elementFromPoint(sampleX, sampleY) as HTMLElement | null;
+      if (!targetEl) return;
 
-      let current = targetEl;
-
-      while (current && current !== document.body && current !== document.documentElement) {
-        const dataColor = current.getAttribute('data-color');
-        if (dataColor) {
-          const clean = dataColor.trim().toUpperCase();
-          if (clean === '#FFFEF2' || clean === '#FFF' || clean === '#FFFFFF' || clean === '#FFF8E7' || clean === 'CREAM') {
-            setIsLightSection(true);
-            return;
-          } else if (clean === '#0A0A0A' || clean === '#000000' || clean === 'OBSIDIAN' || clean === 'DARK') {
-            setIsLightSection(false);
-            return;
-          }
+      // Fast O(1) closest ancestor check for data-color (avoids layout thrashing)
+      const colorContainer = targetEl.closest('[data-color]');
+      if (colorContainer) {
+        const clean = colorContainer.getAttribute('data-color')?.trim().toUpperCase();
+        if (clean === '#FFFEF2' || clean === '#FFF' || clean === '#FFFFFF' || clean === '#FFF8E7' || clean === 'CREAM') {
+          setIsLightSection((prev) => (!prev ? true : prev));
+          return;
+        } else if (clean === '#0A0A0A' || clean === '#000000' || clean === 'OBSIDIAN' || clean === 'DARK') {
+          setIsLightSection((prev) => (prev ? false : prev));
+          return;
         }
-        current = current.parentElement;
       }
 
+      // Check document or section-level theme classes
       if (document.body.classList.contains('light-theme') || document.documentElement.classList.contains('light-theme')) {
-        setIsLightSection(true);
+        setIsLightSection((prev) => (!prev ? true : prev));
         return;
       }
 
-      let bg = '';
-      current = targetEl;
-      while (current && current !== document.body) {
-        const style = window.getComputedStyle(current);
-        const color = style.backgroundColor;
-        if (color && color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') {
-          bg = color;
-          break;
+      // Match explicit light background utility classes without computing styles in a loop
+      try {
+        const lightContainer = targetEl.closest(
+          '.bg-white, .light-section, [data-theme="light"], [class*="bg-[#FFFEF2]"], [class*="bg-[#f5f0e6]"], [class*="bg-[#fff]"]'
+        );
+        if (lightContainer) {
+          setIsLightSection((prev) => (!prev ? true : prev));
+          return;
         }
-        current = current.parentElement;
+      } catch {
+        // Defensive fallback in case of selector parsing anomaly
       }
 
-      if (!bg) {
-        bg = window.getComputedStyle(document.body).backgroundColor;
-      }
-
-      const rgb = bg.match(/\d+/g);
-      if (rgb && rgb.length >= 3) {
-        const r = parseInt(rgb[0], 10);
-        const g = parseInt(rgb[1], 10);
-        const b = parseInt(rgb[2], 10);
-        const luminance = (r * 299 + g * 587 + b * 114) / 1000;
-        setIsLightSection(luminance > 160);
-      }
+      // Default to dark theme for C8C obsidian aesthetic
+      setIsLightSection((prev) => (prev ? false : prev));
     };
 
     const onScrollThrottled = () => {

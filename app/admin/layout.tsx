@@ -1,5 +1,6 @@
 import React from 'react';
 import { ToastProvider } from '@/components/admin/Toast';
+import SessionProviderWrapper from '@/components/SessionProviderWrapper';
 
 export const metadata = {
   title: "Admin Panel | CRE8TIVECOVE",
@@ -11,5 +12,9 @@ export default function AdminRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ToastProvider>{children}</ToastProvider>;
+  return (
+    <SessionProviderWrapper>
+      <ToastProvider>{children}</ToastProvider>
+    </SessionProviderWrapper>
+  );
 }

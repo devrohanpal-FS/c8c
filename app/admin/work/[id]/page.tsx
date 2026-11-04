@@ -5,6 +5,11 @@ export const metadata = {
   description: "Edit existing portfolio work item.",
 };
 
-export default function AdminWorkEditPage({ params }: { params: { id: string } }) {
-  return <AdminWorkClient editId={params.id} />;
+interface AdminWorkEditPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function AdminWorkEditPage({ params }: AdminWorkEditPageProps) {
+  const { id } = await params;
+  return <AdminWorkClient editId={id} />;
 }
