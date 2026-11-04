@@ -443,11 +443,19 @@ export default function AdminWorkClient({ autoOpenNew, editId }: AdminWorkClient
                   <FormField label="CATEGORY">
                     <input
                       type="text"
+                      list="work-categories-list"
                       value={editingWork.category || ''}
                       onChange={(e) => setEditingWork({ ...editingWork, category: e.target.value })}
-                      placeholder="e.g. Commercial Direction"
+                      placeholder="e.g. TVC and DVC"
                       className="w-full bg-[#181818] text-white px-4 py-3 rounded-2xl font-sans text-xs outline-none border border-white/15 focus:border-[#ffd700]"
                     />
+                    <datalist id="work-categories-list">
+                      <option value="TVC and DVC" />
+                      <option value="Motivational AVs" />
+                      <option value="Gen AI" />
+                      <option value="After Event AVs" />
+                      <option value="Corporate Films" />
+                    </datalist>
                   </FormField>
                 </div>
 

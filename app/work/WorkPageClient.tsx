@@ -9,9 +9,9 @@ import {
   Sparkles,
   Film,
   Flame,
-  Box,
+  Cpu,
   Video,
-  Camera,
+  Briefcase,
 } from 'lucide-react';
 
 import PageWrapper from '@/components/PageWrapper';
@@ -39,11 +39,11 @@ export interface CategoryItem {
 
 export const WORK_CATEGORIES: CategoryItem[] = [
   { key: 'All', label: 'All', icon: Sparkles },
-  { key: 'TVC & Commercials', label: 'TVC & Commercials', icon: Film },
-  { key: 'Brand Campaigns', label: 'Brand Campaigns', icon: Flame },
-  { key: 'CGI & AI Commercials', label: 'CGI & AI Commercials', icon: Box },
-  { key: 'Corporate AV & Testimonials', label: 'Corporate AV & Testimonials', icon: Video },
-  { key: 'Photoshoot', label: 'Photoshoot', icon: Camera },
+  { key: 'TVC and DVC', label: 'TVC and DVC', icon: Film },
+  { key: 'Motivational AVs', label: 'Motivational AVs', icon: Flame },
+  { key: 'Gen AI', label: 'Gen AI', icon: Cpu },
+  { key: 'After Event AVs', label: 'After Event AVs', icon: Video },
+  { key: 'Corporate Films', label: 'Corporate Films', icon: Briefcase },
 ];
 
 /**
@@ -95,43 +95,50 @@ function matchesCategory(work: WorkItem, selectedCategory: string): boolean {
     return true;
   }
 
-  // 2. TVC & Commercials
-  if (selectedCategory === 'TVC & Commercials') {
+  // 2. TVC and DVC
+  if (selectedCategory === 'TVC and DVC') {
     return (
       cat.includes('tvc') ||
+      cat.includes('dvc') ||
       cat.includes('commercial') ||
       cat.includes('film') ||
       cat.includes('automotive') ||
       cat.includes('cinematography') ||
       title.includes('tvc') ||
+      title.includes('dvc') ||
       title.includes('warivo') ||
       title.includes('players') ||
-      title.includes('work doesn')
+      title.includes('work doesn') ||
+      title.includes('sbi foreign')
     );
   }
 
-  // 3. Brand Campaigns
-  if (selectedCategory === 'Brand Campaigns') {
+  // 3. Motivational AVs
+  if (selectedCategory === 'Motivational AVs') {
     return (
+      cat.includes('motivational') ||
+      cat.includes('anthem') ||
+      cat.includes('inspiration') ||
+      cat.includes('manifesto') ||
+      cat.includes('awareness') ||
+      cat.includes('culture') ||
       cat.includes('campaign') ||
       cat.includes('brand') ||
       cat.includes('strategy') ||
-      cat.includes('identity') ||
-      cat.includes('advertising') ||
-      title.includes('bharat') ||
-      title.includes('bajaj') ||
-      title.includes('ecodet') ||
-      title.includes('yono') ||
       title.includes('conversations') ||
-      title.includes('skyla')
+      title.includes('skyla') ||
+      title.includes('bharat') ||
+      title.includes('bajaj')
     );
   }
 
-  // 4. CGI & AI Commercials
-  if (selectedCategory === 'CGI & AI Commercials') {
+  // 4. Gen AI
+  if (selectedCategory === 'Gen AI') {
     return (
-      cat.includes('cgi') ||
+      cat.includes('gen ai') ||
       cat.includes('ai') ||
+      cat.includes('generative') ||
+      cat.includes('cgi') ||
       cat.includes('3d') ||
       cat.includes('vfx') ||
       cat.includes('webgl') ||
@@ -139,42 +146,45 @@ function matchesCategory(work: WorkItem, selectedCategory: string): boolean {
       cat.includes('motion graphics') ||
       cat.includes('explainer') ||
       title.includes('midlands') ||
-      title.includes('gst')
+      title.includes('gst') ||
+      title.includes('yono') ||
+      title.includes('ecodet')
     );
   }
 
-  // 5. Corporate AV & Testimonials
-  if (selectedCategory === 'Corporate AV & Testimonials') {
+  // 5. After Event AVs
+  if (selectedCategory === 'After Event AVs') {
+    return (
+      cat.includes('after event') ||
+      cat.includes('event') ||
+      cat.includes('conference') ||
+      cat.includes('exhibition') ||
+      cat.includes('launch') ||
+      cat.includes('activation') ||
+      title.includes('gitex') ||
+      title.includes('barco') ||
+      title.includes('event')
+    );
+  }
+
+  // 6. Corporate Films
+  if (selectedCategory === 'Corporate Films') {
     return (
       cat.includes('corporate') ||
-      cat.includes('av') ||
-      cat.includes('testimonial') ||
+      cat.includes('walkthrough') ||
+      cat.includes('medical') ||
       cat.includes('healthcare') ||
-      cat.includes('event technology') ||
-      cat.includes('aerial') ||
+      cat.includes('clinic') ||
+      cat.includes('diagnostic') ||
       cat.includes('drone') ||
+      cat.includes('fpv') ||
+      cat.includes('aerial') ||
       cat.includes('virtual tour') ||
       cat.includes('360') ||
+      cat.includes('overview') ||
       title.includes('neuro') ||
       title.includes('drone') ||
-      title.includes('barco') ||
       title.includes('xtended')
-    );
-  }
-
-  // 6. Photoshoot
-  if (selectedCategory === 'Photoshoot') {
-    return (
-      cat.includes('photoshoot') ||
-      cat.includes('photo') ||
-      cat.includes('still') ||
-      cat.includes('print') ||
-      cat.includes('editorial') ||
-      cat.includes('lifestyle') ||
-      title.includes('photoshoot') ||
-      title.includes('photo') ||
-      title.includes('vogue') ||
-      title.includes('aura')
     );
   }
 
@@ -320,7 +330,7 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
         number: String(idx + 1).padStart(2, '0'),
         title: w.title || '',
         client: w.client || 'CRE8TIVECOVE PARTNER',
-        category: w.category || 'TVC & Commercials',
+        category: w.category || 'TVC and DVC',
         slug: w.slug,
         image: w.media || w.thumbnailUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
         video: w.videoUrl || w.projectVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
@@ -340,7 +350,7 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
             number: String(idx + 1).padStart(2, '0'),
             title: w.title || '',
             client: w.client || 'CRE8TIVECOVE PARTNER',
-            category: w.category || 'TVC & Commercials',
+            category: w.category || 'TVC and DVC',
             slug: w.slug,
             image: w.thumbnailUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
             video: w.heroVideoUrl || w.projectVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
