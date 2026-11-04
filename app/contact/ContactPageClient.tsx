@@ -57,7 +57,7 @@ const SERVICE_GROUPS = [
 export default function ContactPageClient({ siteSettings }: ContactPageClientProps = {}) {
   const contactEmail = siteSettings?.email || 'hello@cre8tivecove.com';
   const contactAddress = siteSettings?.address || 'Delhi, India';
-  const [contactImg, setContactImg] = useState('/images/stock/stock-work.jpg');
+  const [contactImg, setContactImg] = useState('/images/stock/contact.png');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -321,13 +321,12 @@ export default function ContactPageClient({ siteSettings }: ContactPageClientPro
                 <div
                   id="contactPrivacyNotice"
                   tabIndex={-1}
-                  className={`p-6 sm:p-7 rounded-2xl bg-[#141414] border transition-all duration-300 font-sans space-y-4 ${
-                    consentError && !consentGiven
+                  className={`p-6 sm:p-7 rounded-2xl bg-[#141414] border transition-all duration-300 font-sans space-y-4 ${consentError && !consentGiven
                       ? 'border-amber-500/80 ring-2 ring-amber-500/40 bg-amber-950/10'
                       : consentGiven
-                      ? 'border-[#ffd700]/40 bg-[#161616]'
-                      : 'border-white/10'
-                  }`}
+                        ? 'border-[#ffd700]/40 bg-[#161616]'
+                        : 'border-white/10'
+                    }`}
                 >
                   {/* Notice Header & Statutory Version */}
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
@@ -430,13 +429,12 @@ export default function ContactPageClient({ siteSettings }: ContactPageClientPro
                   </div>
 
                   {/* Explicit Mandatory Acknowledgment Checkbox */}
-                  <div className={`p-4 rounded-xl border transition-all ${
-                    consentGiven
+                  <div className={`p-4 rounded-xl border transition-all ${consentGiven
                       ? 'bg-emerald-950/25 border-emerald-500/40 ring-1 ring-emerald-500/20'
                       : consentError
-                      ? 'bg-amber-950/30 border-amber-500/70'
-                      : 'bg-black/50 border-white/10 hover:border-white/20'
-                  }`}>
+                        ? 'bg-amber-950/30 border-amber-500/70'
+                        : 'bg-black/50 border-white/10 hover:border-white/20'
+                    }`}>
                     <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
