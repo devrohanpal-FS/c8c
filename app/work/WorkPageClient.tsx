@@ -219,7 +219,7 @@ function ShowcaseCard({ work, index }: WorkCardProps) {
         videoRef.current.currentTime = 0;
         const playPromise = videoRef.current.play();
         if (playPromise !== undefined) {
-          playPromise.catch(() => {});
+          playPromise.catch(() => { });
         }
       } else {
         videoRef.current.pause();
@@ -263,9 +263,8 @@ function ShowcaseCard({ work, index }: WorkCardProps) {
               loop
               playsInline
               preload="none"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
-              }`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
             />
           )}
 
@@ -333,7 +332,7 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
         category: w.category || 'TVC and DVC',
         slug: w.slug,
         image: w.media || w.thumbnailUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-        video: w.videoUrl || w.projectVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
+        video: w.videoUrl || w.projectVideoUrl || 'https://www.youtube.com/watch?v=hu-mu6556so',
         featured: Boolean(w.featured),
       }));
     }
@@ -353,13 +352,13 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
             category: w.category || 'TVC and DVC',
             slug: w.slug,
             image: w.thumbnailUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-            video: w.heroVideoUrl || w.projectVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
+            video: w.heroVideoUrl || w.projectVideoUrl || 'https://www.youtube.com/watch?v=hu-mu6556so',
             featured: Boolean(w.featured),
           }));
           setDbWorks(mapped);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const activeWorks = dbWorks;
@@ -427,11 +426,10 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
                   key={cat.key}
                   type="button"
                   onClick={() => setActiveCategory(cat.key)}
-                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap focus:outline-none ${
-                    isActive
+                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap focus:outline-none ${isActive
                       ? 'text-[#0a0a0a] font-semibold'
                       : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   {isActive && (
                     <motion.div
@@ -443,9 +441,8 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
 
                   {/* Category Icon */}
                   <span
-                    className={`relative z-10 transition-colors ${
-                      isActive ? 'text-[#0a0a0a]' : 'text-neutral-400 group-hover:text-[#ffd700]'
-                    }`}
+                    className={`relative z-10 transition-colors ${isActive ? 'text-[#0a0a0a]' : 'text-neutral-400 group-hover:text-[#ffd700]'
+                      }`}
                   >
                     <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </span>
@@ -455,11 +452,10 @@ export default function WorkPageClient({ initialWorks }: WorkPageClientProps = {
 
                   {/* Count Badge */}
                   <span
-                    className={`relative z-10 text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full transition-colors ${
-                      isActive
+                    className={`relative z-10 text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full transition-colors ${isActive
                         ? 'bg-[#0a0a0a]/20 text-[#0a0a0a] font-bold'
                         : 'bg-white/10 text-neutral-400 group-hover:text-white'
-                    }`}
+                      }`}
                   >
                     {count}
                   </span>

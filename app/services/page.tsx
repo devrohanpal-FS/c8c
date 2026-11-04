@@ -59,6 +59,7 @@ export default async function ServicesPage() {
       id: s.id,
       title: s.title,
       slug: s.slug,
+      category: s.category || undefined,
       desc: s.description,
       fullDesc: s.fullDescription,
       image: s.image,

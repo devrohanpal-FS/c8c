@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight, Play, Sparkles } from 'lucide-react';
@@ -39,17 +39,17 @@ function SafeCollageImage({
 }
 
 interface ServiceVideoTextProps {
-  slug: string;
+  slug?: string;
   title: string;
-  isSerif: boolean;
+  isSerif?: boolean;
   videoUrl?: string;
   imageUrl: string;
   number: string;
   tagline?: string;
+  category?: string;
 }
 
 function ServiceVideoText({
-  slug,
   title,
   imageUrl,
   number,
@@ -59,7 +59,7 @@ function ServiceVideoText({
 
   return (
     <Link
-      href={`/services/${slug}`}
+      href="/contact"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative block py-8 sm:py-12 border-b border-white/15 hover:border-white/40 transition-all duration-300 w-full cursor-pointer"
@@ -72,21 +72,20 @@ function ServiceVideoText({
 
           <div className="flex flex-col">
             <h2
-              className={`font-sans font-normal text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight transition-all duration-300 select-none ${
-                isHovered
-                  ? 'scale-[1.01] drop-shadow-[0_15px_30px_rgba(255,215,0,0.2)]'
-                  : 'text-white/90 group-hover:text-white'
-              }`}
+              className={`font-sans font-normal text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight transition-all duration-300 select-none ${isHovered
+                ? 'scale-[1.01] drop-shadow-[0_15px_30px_rgba(255,215,0,0.2)]'
+                : 'text-white/90 group-hover:text-white'
+                }`}
               style={
                 isHovered
                   ? {
-                      backgroundImage: `url(${imageUrl || '/images/stock/stock-service.jpg'})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      color: 'transparent',
-                    }
+                    backgroundImage: `url(${imageUrl || '/images/stock/stock-service.jpg'})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                  }
                   : undefined
               }
             >
@@ -103,8 +102,8 @@ function ServiceVideoText({
 
         {/* CTA HOVER PILL */}
         <div className="flex items-center gap-2 pl-8 md:pl-0 pt-2 md:pt-0">
-          <div className="px-4 py-2 rounded-full border border-white/20 bg-white/5 font-mono text-xs uppercase tracking-widest text-white/60 group-hover:bg-[#ffd700] group-hover:text-black group-hover:border-[#ffd700] transition-all duration-300 flex items-center gap-1.5 font-bold shadow-lg">
-            <span>EXPLORE</span>
+          <div className="px-5 py-2.5 rounded-full border border-white/20 bg-white/5 font-mono text-xs uppercase tracking-widest text-white/70 group-hover:bg-[#ffd700] group-hover:text-black group-hover:border-[#ffd700] transition-all duration-300 flex items-center gap-2 font-bold shadow-lg">
+            <span>GET IN TOUCH</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </div>
         </div>
@@ -118,6 +117,7 @@ export interface ServiceItem {
   title: string;
   name?: string;
   slug: string;
+  category?: string | null;
   desc?: string;
   description?: string;
   tagline?: string;
@@ -168,11 +168,12 @@ export default function ServicesPageClient({
   const heroVideoRef = useRef<HTMLVideoElement>(null);
 
   const [dbServices, setDbServices] = useState<ServiceItem[]>(initialServices || []);
+  const [selectedCategory, setSelectedCategory] = useState<'ALL' | 'CREATIVE' | 'TECHNOLOGY'>('ALL');
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials || []);
   const [clients, setClients] = useState<ClientMiniItem[]>(initialClients || []);
 
   useEffect(() => {
-    fetch('/api/public/services?category=CREATIVE')
+    fetch('/api/public/services')
       .then((res) => res.json())
       .then((data) => {
         if (data.services && Array.isArray(data.services) && data.services.length > 0) {
@@ -200,13 +201,19 @@ export default function ServicesPageClient({
       .catch(() => { });
   }, []);
 
+  const filteredServices = useMemo(() => {
+    if (selectedCategory === 'ALL') return dbServices;
+    return dbServices.filter((s) => s.category === selectedCategory);
+  }, [dbServices, selectedCategory]);
+
   const activeServiceItems =
-    dbServices.map((s, idx) => ({
+    filteredServices.map((s: ServiceItem, idx: number) => ({
       id: s.id,
       slug: s.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : `service-${idx + 1}`),
       title: s.title || s.name || 'Creative Service',
+      category: s.category || 'CREATIVE',
       isSerif: idx % 2 === 1,
-      videoUrl: s.video || s.hoverVideo || s.hoverVideoUrl || 'https://vjs.zencdn.net/v/oceans.mp4',
+      videoUrl: s.video || s.hoverVideo || s.hoverVideoUrl || 'https://www.youtube.com/watch?v=hu-mu6556so',
       imageUrl: s.image || '/images/stock/stock-service.jpg',
       number: String(idx + 1).padStart(2, '0'),
       tagline: s.description || s.tagline || 'Specialized Creative Capability',
@@ -239,16 +246,44 @@ export default function ServicesPageClient({
           <div className="max-w-[1600px] mx-auto flex flex-col items-center">
             {/* CATEGORY SWITCHER */}
             <div className="flex flex-wrap items-center justify-center gap-3 mb-6 z-20 relative">
-              <div className="px-5 py-2 rounded-full bg-black text-[#ffd700] border border-black font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2 shadow-md">
-                <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />
-                <span>Creative & Film Services</span>
-              </div>
-              <Link
-                href="/technology"
-                className="px-5 py-2 rounded-full border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6] font-mono text-xs uppercase tracking-widest transition-all font-bold shadow-sm"
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('ALL')}
+                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${
+                  selectedCategory === 'ALL'
+                    ? 'bg-black text-[#ffd700] border border-black shadow-md'
+                    : 'border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6]'
+                }`}
               >
-                Technology Services (11) →
-              </Link>
+                {selectedCategory === 'ALL' && <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />}
+                <span>All Services ({dbServices.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('CREATIVE')}
+                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${
+                  selectedCategory === 'CREATIVE'
+                    ? 'bg-black text-[#ffd700] border border-black shadow-md'
+                    : 'border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6]'
+                }`}
+              >
+                {selectedCategory === 'CREATIVE' && <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />}
+                <span>Creative & Film ({dbServices.filter((s) => s.category === 'CREATIVE').length || 6})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('TECHNOLOGY')}
+                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${
+                  selectedCategory === 'TECHNOLOGY'
+                    ? 'bg-black text-[#ffd700] border border-black shadow-md'
+                    : 'border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6]'
+                }`}
+              >
+                {selectedCategory === 'TECHNOLOGY' && <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />}
+                <span>Technology ({dbServices.filter((s) => s.category === 'TECHNOLOGY').length || 11})</span>
+              </button>
             </div>
 
             <h1 className="hero-heading font-condensed text-[12vw] sm:text-[13vw] md:text-[14vw] font-black uppercase leading-[0.85] tracking-normal text-black select-none text-center mb-[-3vw] sm:mb-[-4vw] z-10 relative">
@@ -260,7 +295,7 @@ export default function ServicesPageClient({
             <div className="hero-video-box w-full max-w-[1500px] mx-auto aspect-[16/9] sm:aspect-[21/9] md:h-[580px] lg:h-[640px] rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] overflow-hidden relative shadow-2xl z-0 border border-black/10">
               <video
                 ref={heroVideoRef}
-                src="https://vjs.zencdn.net/v/oceans.mp4"
+                src="https://www.youtube.com/watch?v=hu-mu6556so"
                 autoPlay
                 muted
                 loop

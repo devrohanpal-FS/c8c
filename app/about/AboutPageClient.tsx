@@ -61,12 +61,12 @@ export default function AboutPageClient({ cmsAbout, clients, siteSettings }: Abo
             return { value: String(c), label: `ACCREDITATION #${i + 1}` };
           });
         }
-      } catch {}
+      } catch { }
     }
     return [];
   }, [cmsAbout?.credentials]);
 
-  const reelVideoUrl = cmsAbout?.backgroundUrl || 'https://vjs.zencdn.net/v/oceans.mp4';
+  const reelVideoUrl = cmsAbout?.backgroundUrl || 'https://www.youtube.com/watch?v=hu-mu6556so';
   const parsedVideo = parseVideoUrl(reelVideoUrl);
   const heroTitleText = cmsAbout?.heroTitle || 'WEIRD ENERGY SINCE Y2K';
   const companyStoryText = cmsAbout?.companyStory || 'Cre8tiveCove (C8C) was founded in 2000, on a commitment to create commercials and digital experiences that move people.';

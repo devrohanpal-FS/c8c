@@ -71,7 +71,7 @@ export function getServiceDetailBySlug(slug: string): ServiceDetailData | null {
       'Every project we take on is approached with a relentless commitment to originality, deep strategic insight, and immaculate craftsmanship.',
       'We collaborate closely with ambitious founders and forward-thinking brands to build solutions that leave a lasting mark on their audience.',
     ],
-    heroVideo: 'https://vjs.zencdn.net/v/oceans.mp4',
+    heroVideo: 'https://www.youtube.com/watch?v=hu-mu6556so',
     heroImage: '/images/stock/stock-service.jpg',
     capabilities: [
       {

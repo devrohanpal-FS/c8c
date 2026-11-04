@@ -222,7 +222,7 @@ export default function TechnologyPageClient({
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.04 }}
                 >
                   <Link
-                    href={`/services/${srv.slug}`}
+                    href="/contact"
                     className="group relative block bg-white/60 hover:bg-white border border-black/10 hover:border-black/30 rounded-3xl p-6 sm:p-8 lg:p-10 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:-translate-y-1"
                   >
                     <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-8 sm:gap-10">

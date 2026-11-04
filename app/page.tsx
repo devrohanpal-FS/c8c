@@ -99,7 +99,7 @@ export default async function HomePage() {
 
     featuredWorks = works.map((w) => {
       const galleryVideo = w.gallery && w.gallery.length > 0 ? w.gallery[0].mediaUrl : null;
-      const vUrl = w.heroVideoUrl || w.projectVideoUrl || galleryVideo || 'https://vjs.zencdn.net/v/oceans.mp4';
+      const vUrl = w.heroVideoUrl || w.projectVideoUrl || galleryVideo || 'https://www.youtube.com/watch?v=hu-mu6556so';
       return {
         id: w.id,
         title: w.title,
