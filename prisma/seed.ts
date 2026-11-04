@@ -83,7 +83,7 @@ async function main() {
       linkedin: 'https://www.linkedin.com/company/cre8tivecove/',
       instagram: 'https://www.instagram.com/cre8tivecove.cc/',
       youtube: 'https://www.youtube.com/@CRE8TIVECOVE',
-      footerContent: '© 2026 CRE8TIVECOVE. All rights reserved. Weird Energy Since Y2K.',
+      footerContent: '© 2026 CRE8TIVECOVE. All rights reserved.',
       defaultCtaHeading: 'READY TO MAKE SOMETHING WEIRD?',
       defaultCtaText: "Let's build something people won't stop talking about.",
       defaultCtaUrl: '/contact',

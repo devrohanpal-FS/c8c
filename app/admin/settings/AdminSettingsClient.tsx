@@ -20,7 +20,7 @@ export default function AdminSettingsClient() {
     linkedin: "https://www.linkedin.com/company/cre8tivecove/",
     instagram: "https://www.instagram.com/cre8tivecove.cc/",
     youtube: "https://www.youtube.com/@CRE8TIVECOVE",
-    footerContent: "© 2026 CRE8TIVECOVE. All rights reserved. Weird Energy Since Y2K.",
+    footerContent: "© 2026 CRE8TIVECOVE. All rights reserved.",
     defaultCtaHeading: "READY TO START?",
     defaultCtaText: "Let's make something iconic together.",
     defaultCtaUrl: "/contact",

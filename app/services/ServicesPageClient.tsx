@@ -249,11 +249,10 @@ export default function ServicesPageClient({
               <button
                 type="button"
                 onClick={() => setSelectedCategory('ALL')}
-                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${
-                  selectedCategory === 'ALL'
+                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${selectedCategory === 'ALL'
                     ? 'bg-black text-[#ffd700] border border-black shadow-md'
                     : 'border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6]'
-                }`}
+                  }`}
               >
                 {selectedCategory === 'ALL' && <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />}
                 <span>All Services ({dbServices.length})</span>
@@ -262,11 +261,10 @@ export default function ServicesPageClient({
               <button
                 type="button"
                 onClick={() => setSelectedCategory('CREATIVE')}
-                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${
-                  selectedCategory === 'CREATIVE'
+                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${selectedCategory === 'CREATIVE'
                     ? 'bg-black text-[#ffd700] border border-black shadow-md'
                     : 'border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6]'
-                }`}
+                  }`}
               >
                 {selectedCategory === 'CREATIVE' && <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />}
                 <span>Creative & Film ({dbServices.filter((s) => s.category === 'CREATIVE').length || 6})</span>
@@ -275,11 +273,10 @@ export default function ServicesPageClient({
               <button
                 type="button"
                 onClick={() => setSelectedCategory('TECHNOLOGY')}
-                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${
-                  selectedCategory === 'TECHNOLOGY'
+                className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 shadow-sm flex items-center gap-2 cursor-pointer ${selectedCategory === 'TECHNOLOGY'
                     ? 'bg-black text-[#ffd700] border border-black shadow-md'
                     : 'border border-black/15 bg-white/70 hover:bg-black hover:text-[#f5f0e6]'
-                }`}
+                  }`}
               >
                 {selectedCategory === 'TECHNOLOGY' && <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-pulse" />}
                 <span>Technology ({dbServices.filter((s) => s.category === 'TECHNOLOGY').length || 11})</span>
@@ -295,18 +292,20 @@ export default function ServicesPageClient({
             <div className="hero-video-box w-full max-w-[1500px] mx-auto aspect-[16/9] sm:aspect-[21/9] md:h-[580px] lg:h-[640px] rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] overflow-hidden relative shadow-2xl z-0 border border-black/10">
               <video
                 ref={heroVideoRef}
-                src="https://www.youtube.com/watch?v=hu-mu6556so"
                 autoPlay
                 muted
                 loop
                 playsInline
                 className="w-full h-full object-cover"
-              />
+              >
+                <source src="/uploads/media_1789641018034_c785dac94a320847.mp4" type="video/mp4" />
+                <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
+              </video>
               <div className="absolute inset-0 bg-black/15 pointer-events-none" />
 
               <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 z-20 flex items-center justify-center">
                 <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center">
-                  <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+                  <svg className="w-full h-full animate-spin-slow pointer-events-none" viewBox="0 0 100 100">
                     <path
                       id="circlePath"
                       d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
@@ -318,7 +317,19 @@ export default function ServicesPageClient({
                       </textPath>
                     </text>
                   </svg>
-                  <button className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white text-black flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (heroVideoRef.current) {
+                        if (heroVideoRef.current.paused) {
+                          heroVideoRef.current.play();
+                        } else {
+                          heroVideoRef.current.pause();
+                        }
+                      }
+                    }}
+                    className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white text-black flex items-center justify-center shadow-lg hover:scale-110 transition-transform cursor-pointer"
+                  >
                     <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-black translate-x-0.5" />
                   </button>
                 </div>
